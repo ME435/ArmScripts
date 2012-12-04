@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">ArmScripts</string>
+    <string name="title_section3">Run</string>
+    <string name="title_section2">Script Editor</string>
+    <string name="title_section1">Position Editor</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">Robotics Engineering</string>
+    <string name="welcome_me435_students">Welcome ME435 Students</string>
+
+</resources>
