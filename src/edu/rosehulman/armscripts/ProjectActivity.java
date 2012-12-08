@@ -51,7 +51,7 @@ public class ProjectActivity extends FragmentActivity implements ActionBar.TabLi
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_main, menu);
+        getMenuInflater().inflate(R.menu.activity_project, menu);
         return true;
     }
 

@@ -9,8 +9,7 @@
 
     <application
         android:icon="@drawable/roselogo"
-        android:label="@string/me435"
-        android:theme="@style/AppTheme" >
+        android:label="@string/me435">
         <activity
             android:name=".ProjectListActivity"
             android:label="@string/title_activity_project_list" >

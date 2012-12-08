@@ -8,5 +8,11 @@
     <string name="welcome_me435_students">Welcome ME435 Students</string>
     <string name="get_started">Get Started</string>
     <string name="title_activity_project_list">Robotics Engineering</string>
+	<string name="add_project">Add Project</string>
+    <string name="delete_project">Delete Project</string>
+    <string name="edit_project_name">Edit Project Name</string>
+    <string name="create_project">Create Project</string>
+    <string name="cancel">Cancel</string>
+    <string name="enter_a_project_name">Enter a project name</string>
 
 </resources>
