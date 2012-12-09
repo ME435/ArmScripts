@@ -152,6 +152,13 @@ public class ProjectListActivity extends ListActivity {
     mProjectDbAdapter.createProject(projectName);
     Cursor cursor = mProjectDbAdapter.fetchAllProjects();
     mProjectAdapter.changeCursor(cursor);
+    
+    
+    Intent projectIntent = new Intent(ProjectListActivity.this, ProjectActivity.class);
+    
+    // TODO: Add the project name and id as extras
+    
+    startActivity(projectIntent);
   }
 
   private void editProjectName(String projectName) {

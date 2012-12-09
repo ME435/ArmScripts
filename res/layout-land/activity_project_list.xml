@@ -6,29 +6,29 @@
     android:background="#000"
     tools:context=".ProjectListActivity" >
 
+    
     <ListView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />    <LinearLayout
+        android:layout_height="wrap_content" />
+    <LinearLayout
         android:id="@android:id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal" >
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:orientation="vertical" >
-
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="40dp"
-            android:gravity="center_horizontal"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="40dp"
             android:text="@string/welcome_me435_students"
             android:textSize="40sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:contentDescription="@string/dagu_robot_arm"
-            android:src="@drawable/daguarm" />
 
         <TextView
             android:layout_width="match_parent"
@@ -38,14 +38,24 @@
             android:textColor="#8bb"
             android:textSize="22sp"
             android:textStyle="italic" />
-
+
         <Button
             android:id="@+id/get_started_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="right"
             android:text="@string/get_started"
             android:textSize="32sp" />
-    </LinearLayout>
 
+    </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/dagu_robot_arm"
+            android:padding="50dp"
+            android:src="@drawable/daguarm" />
+
+</LinearLayout>
 </LinearLayout>
