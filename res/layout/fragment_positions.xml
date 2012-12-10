@@ -1,14 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="Positions" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textview_pendant_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:text="Current robot position"
+            android:textColor="@color/light_blue"
+            android:textSize="22sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:layout_below="@id/textview_pendant_title"
+            android:background="@color/light_blue" />
+
+        <LinearLayout
+            android:id="@+id/linearlayout_joint_buttons"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_below="@id/textview_pendant_title"
+            android:orientation="vertical" >
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="1: 0" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="2: 90" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="3: 0" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="4: -90" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="5: 0" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/viewgroup_current_joint_angle_area"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/textview_pendant_title"
+            android:layout_toRightOf="@id/linearlayout_joint_buttons"
+            android:padding="30dp" >
+
+            <ImageView 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="blue circle"
+                android:layout_centerInParent="true"
+                android:src="@drawable/blue_circle_2"
+                />
+            <TextView
+                android:id="@+id/textview_current_angle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="48 degrees"
+                android:textSize="40sp" />
+
+            <SeekBar
+                android:id="@+id/absolute_joint_angle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textview_current_angle"
+                android:layout_marginBottom="65dp"
+                android:max="540"
+                android:progress="318" />
+
+            <SeekBar
+                android:id="@+id/relative_joint_angle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textview_current_angle"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="65dp"
+                android:max="6"
+                android:progress="3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/absolute_joint_angle"
+                android:layout_alignLeft="@id/absolute_joint_angle"
+                android:text="-270"
+                android:textColor="@color/angle_seek_bar_labels"
+                android:textSize="@dimen/angle_seek_bar_labels" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/absolute_joint_angle"
+                android:layout_alignRight="@id/absolute_joint_angle"
+                android:text="+270"
+                android:textColor="@color/angle_seek_bar_labels"
+                android:textSize="@dimen/angle_seek_bar_labels" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/relative_joint_angle"
+                android:layout_below="@id/relative_joint_angle"
+                android:text="-3 delta"
+                android:textColor="@color/angle_seek_bar_labels"
+                android:textSize="@dimen/angle_seek_bar_labels" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/relative_joint_angle"
+                android:layout_below="@id/relative_joint_angle"
+                android:text="+3 delta"
+                android:textColor="@color/angle_seek_bar_labels"
+                android:textSize="@dimen/angle_seek_bar_labels" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/textview_existing_positions_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="15dp"
+            android:text="Existing positions"
+            android:textColor="@color/light_blue"
+            android:textSize="22sp" />
+
+        <View
+            android:id="@+id/existing_positions_underline"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:layout_below="@id/textview_existing_positions_title"
+            android:background="@color/light_blue" />
+
+        <Spinner
+            android:id="@+id/position_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="30sp"
+            android:layout_below="@id/textview_existing_positions_title" />
+        
+
+        <TextView
+            android:id="@+id/joint_1_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/position_selector" 
+            android:text="Joint 1" />
+        <TextView
+            android:id="@+id/joint_2_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/joint_1_title"
+            android:text="Joint 2" />
+        <TextView
+            android:id="@+id/joint_3_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/joint_2_title"
+            android:text="Joint 3" />
+        <TextView
+            android:id="@+id/joint_4_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/joint_3_title"
+            android:text="Joint 4" />
+        <TextView
+            android:id="@+id/joint_5_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/joint_4_title"
+            android:text="Joint 5" />
+    </RelativeLayout>
+
+</LinearLayout>
