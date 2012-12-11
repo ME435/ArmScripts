@@ -15,13 +15,25 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="15dp"
-            android:text="Current robot position"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Pendant"
             android:textColor="@color/light_blue"
-            android:textSize="22sp" />
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/create_position_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/textview_pendant_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/red_button"
+            android:text="Create position" />
 
         <View
+            android:id="@+id/current_position_underline"
             android:layout_width="match_parent"
             android:layout_height="2dip"
             android:layout_below="@id/textview_pendant_title"
@@ -31,38 +43,38 @@
             android:id="@+id/linearlayout_joint_buttons"
             android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:layout_below="@id/textview_pendant_title"
+            android:layout_below="@id/current_position_underline"
             android:orientation="vertical" >
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:id="@+id/current_position_joint_1_button"
+                style="@style/ButtonText.JointButtons"
                 android:text="1: 0" />
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:id="@+id/current_position_joint_2_button"
+                style="@style/ButtonText.JointButtons"
                 android:text="2: 90" />
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:id="@+id/current_position_joint_3_button"
+                style="@style/ButtonText.JointButtons"
                 android:text="3: 0" />
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:id="@+id/current_position_joint_4_button"
+                style="@style/ButtonText.JointButtons"
                 android:text="4: -90" />
 
             <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:id="@+id/current_position_joint_5_button"
+                style="@style/ButtonText.JointButtons"
                 android:text="5: 0" />
+
+            <Button
+                android:id="@+id/current_position_gripper_button"
+                style="@style/ButtonText.JointButtons"
+                android:text="Gripper" />
         </LinearLayout>
 
         <RelativeLayout
@@ -71,21 +83,22 @@
             android:layout_height="match_parent"
             android:layout_below="@id/textview_pendant_title"
             android:layout_toRightOf="@id/linearlayout_joint_buttons"
-            android:padding="30dp" >
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp" >
 
-            <ImageView 
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="blue circle"
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
                 android:layout_centerInParent="true"
-                android:src="@drawable/blue_circle_2"
-                />
+                android:contentDescription="blue circle"
+                android:src="@drawable/blue_circle_2" />
+
             <TextView
                 android:id="@+id/textview_current_angle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="48 degrees"
+                android:text="48 deg"
                 android:textSize="40sp" />
 
             <SeekBar
@@ -93,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/textview_current_angle"
-                android:layout_marginBottom="65dp"
+                android:layout_marginBottom="70dp"
                 android:max="540"
                 android:progress="318" />
 
@@ -103,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textview_current_angle"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="65dp"
+                android:layout_marginTop="70dp"
                 android:max="6"
                 android:progress="3" />
 
@@ -145,68 +158,175 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" >
+        android:layout_weight="1"
+        android:orientation="vertical" >
 
-        <TextView
+        <!--
+             <TextView
             android:id="@+id/textview_existing_positions_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="15dp"
-            android:text="Existing positions"
+            android:text=""
             android:textColor="@color/light_blue"
-            android:textSize="22sp" />
+            android:textSize="30sp" />
+        -->
 
         <View
-            android:id="@+id/existing_positions_underline"
             android:layout_width="match_parent"
             android:layout_height="2dip"
-            android:layout_below="@id/textview_existing_positions_title"
             android:background="@color/light_blue" />
 
         <Spinner
             android:id="@+id/position_selector"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:layout_below="@id/textview_existing_positions_title" />
-        
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/black_button"
+            android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/joint_1_title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/position_selector" 
-            android:text="Joint 1" />
-        <TextView
-            android:id="@+id/joint_2_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/joint_1_title"
-            android:text="Joint 2" />
-        <TextView
-            android:id="@+id/joint_3_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/joint_2_title"
-            android:text="Joint 3" />
-        <TextView
-            android:id="@+id/joint_4_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/joint_3_title"
-            android:text="Joint 4" />
-        <TextView
-            android:id="@+id/joint_5_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/joint_4_title"
-            android:text="Joint 5" />
-    </RelativeLayout>
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <View
+                    android:id="@+id/middle_of_two_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_centerInParent="true" />
+
+                 <Button
+                    android:id="@+id/go_to_position_button"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/middle_of_two_buttons"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/green_button"
+                    android:text="Go to position" />
+
+                <Button
+                    android:id="@+id/set_position_button"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/middle_of_two_buttons"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/blue_button"
+                    android:text="Set position" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/existing_joint_values_area"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/joint_1_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Joint 1"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/joint_1_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_1_title"
+                    android:layout_toRightOf="@id/joint_1_title"
+                    android:text="90"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/joint_2_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/joint_1_title"
+                    android:text="Joint 2"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/joint_2_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_2_title"
+                    android:layout_toRightOf="@id/joint_2_title"
+                    android:text="0"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/joint_3_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/joint_2_title"
+                    android:text="Joint 3"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/joint_3_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_3_title"
+                    android:layout_toRightOf="@id/joint_3_title"
+                    android:text="-90"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/joint_4_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/joint_3_title"
+                    android:text="Joint 4"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/joint_4_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_4_title"
+                    android:layout_toRightOf="@id/joint_4_title"
+                    android:text="90"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/joint_5_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/joint_4_title"
+                    android:text="Joint 5"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/joint_5_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_5_title"
+                    android:layout_toRightOf="@id/joint_5_title"
+                    android:text="90"
+                    android:textStyle="italic" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
 
 </LinearLayout>

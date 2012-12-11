@@ -2,6 +2,7 @@
 <resources>
     <color name="light_blue">#2BA2CC</color>
     <color name="angle_seek_bar_labels">#888</color>
+    <color name="joint_button">#111</color>
     
     
 </resources>
