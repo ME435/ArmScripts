@@ -28,6 +28,33 @@ public class ProjectDbAdapter {
   private SQLiteDatabase mDb;
   private final Context mContext;
 
+
+  private static class ProjectDbOpenHelper extends SQLiteOpenHelper {
+
+    private static final String CREATE_STATEMENT =
+        "create table " + TABLE_NAME +
+        " (" + KEY_ID + " integer primary key autoincrement, " +
+        KEY_NAME + " text not null);";
+    private static String DROP_STATEMENT = "DROP TABLE IF EXISTS " + TABLE_NAME;
+    
+    ProjectDbOpenHelper(Context context) {
+      super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+      db.execSQL(CREATE_STATEMENT);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+      Log.w(TAG, "Upgrading from version " + oldVersion + " to " + newVersion
+          + ", which will destroy all old table(s).");
+      db.execSQL(DROP_STATEMENT);
+      onCreate(db);
+    }
+  }
+  
   /**
    * Constructor - takes the context to allow the database to be opened/created
    * 
@@ -125,29 +152,4 @@ public class ProjectDbAdapter {
   }
   
   
-  private static class ProjectDbOpenHelper extends SQLiteOpenHelper {
-
-    private static final String CREATE_STATEMENT =
-        "create table " + TABLE_NAME +
-        " (" + KEY_ID + " integer primary key autoincrement, " +
-        KEY_NAME + " text not null);";
-    private static String DROP_STATEMENT = "DROP TABLE IF EXISTS " + TABLE_NAME;
-    
-    ProjectDbOpenHelper(Context context) {
-      super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-      db.execSQL(CREATE_STATEMENT);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-      Log.w(TAG, "Upgrading from version " + oldVersion + " to " + newVersion
-          + ", which will destroy all old table(s).");
-      db.execSQL(DROP_STATEMENT);
-      onCreate(db);
-    }
-  }
 }

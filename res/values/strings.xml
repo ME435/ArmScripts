@@ -1,7 +1,7 @@
 <resources>
-    <string name="title_section3">Run</string>
-    <string name="title_section2">Script Editor</string>
-    <string name="title_section1">Positions</string>
+    <string name="tab_title_run">Run</string>
+    <string name="tab_title_scripts">Scripts</string>
+    <string name="tab_title_positions">Positions</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="me435">ME435</string>

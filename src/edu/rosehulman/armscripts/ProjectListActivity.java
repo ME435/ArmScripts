@@ -57,21 +57,15 @@ public class ProjectListActivity extends ListActivity {
     mProjectDbAdapter.open();
 
     Cursor cursor = mProjectDbAdapter.fetchAllProjects();
-//    if (cursor == null || !cursor.moveToFirst()) {
       // No projects yet. Welcome screen is up.
-      // Determine if there are no items in the list.
       Button getStartedButton = (Button) findViewById(R.id.get_started_button);
       getStartedButton.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
           mSelectedId = NO_ID_SELECTED;
           showDialog(DIALOG_ID);
-//          Intent projectIntent = new Intent(ProjectListActivity.this, ProjectActivity.class);
-//          startActivity(projectIntent);
         }
       });
-//    }
     // Make the adapter even if the cursor is empty to prepare for first item.
     int viewResourceId = R.layout.project_list_item;
     String[] fromColumns = new String[] { ProjectDbAdapter.KEY_NAME };

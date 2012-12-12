@@ -21,19 +21,18 @@
         android:layout_weight="1"
         android:layout_height="match_parent"
         android:orientation="vertical" >
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="60dp"
             android:text="@string/welcome_me435_students"
             android:textSize="40sp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="50dp"
+            android:padding="30dp"
             android:text="@string/welcome_message"
             android:textColor="#8bb"
             android:textSize="22sp"

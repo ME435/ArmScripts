@@ -35,9 +35,9 @@ public class ProjectActivity extends Activity implements ActionBar.TabListener {
     actionBar.setDisplayHomeAsUpEnabled(true);
 
     // Add tabs to the action bar.
-    actionBar.addTab(actionBar.newTab().setText(R.string.title_section1).setTabListener(this));
-    actionBar.addTab(actionBar.newTab().setText(R.string.title_section2).setTabListener(this));
-    actionBar.addTab(actionBar.newTab().setText(R.string.title_section3).setTabListener(this));
+    actionBar.addTab(actionBar.newTab().setText(R.string.tab_title_positions).setTabListener(this));
+    actionBar.addTab(actionBar.newTab().setText(R.string.tab_title_scripts).setTabListener(this));
+    actionBar.addTab(actionBar.newTab().setText(R.string.tab_title_run).setTabListener(this));
   }
 
   @Override
