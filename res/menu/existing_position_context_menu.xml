@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_item_position_delete"
+        android:title="Delete positoin">
+    </item>
+    <item
+        android:id="@+id/menu_item_position_edit"
+        android:title="Edit position name">
+    </item>
+
+</menu>

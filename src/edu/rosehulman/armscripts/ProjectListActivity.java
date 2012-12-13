@@ -27,7 +27,7 @@ import android.widget.SimpleCursorAdapter;
 public class ProjectListActivity extends ListActivity {
 
   public static final String TAG = "ProjectList";
-
+  public static final String EXTRA_PROJECT_ID = "extra_project_id";
   /**
    * Dialog ID for adding and editing projects (one dialog for both tasks)
    */
@@ -57,15 +57,15 @@ public class ProjectListActivity extends ListActivity {
     mProjectDbAdapter.open();
 
     Cursor cursor = mProjectDbAdapter.fetchAllProjects();
-      // No projects yet. Welcome screen is up.
-      Button getStartedButton = (Button) findViewById(R.id.get_started_button);
-      getStartedButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          mSelectedId = NO_ID_SELECTED;
-          showDialog(DIALOG_ID);
-        }
-      });
+    // No projects yet. Welcome screen is up.
+    Button getStartedButton = (Button) findViewById(R.id.get_started_button);
+    getStartedButton.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        mSelectedId = NO_ID_SELECTED;
+        showDialog(DIALOG_ID);
+      }
+    });
     // Make the adapter even if the cursor is empty to prepare for first item.
     int viewResourceId = R.layout.project_list_item;
     String[] fromColumns = new String[] { ProjectDbAdapter.KEY_NAME };
@@ -85,11 +85,8 @@ public class ProjectListActivity extends ListActivity {
   protected void onListItemClick(ListView listView, View selectedView, int position, long id) {
     super.onListItemClick(listView, selectedView, position, id);
     mSelectedId = id;
-    //showDialog(DIALOG_ID);
     Intent projectIntent = new Intent(ProjectListActivity.this, ProjectActivity.class);
-    
-    // TODO: Add the project name and id as extras
-    
+    projectIntent.putExtra(EXTRA_PROJECT_ID, id);
     startActivity(projectIntent);
   }
 
@@ -143,15 +140,12 @@ public class ProjectListActivity extends ListActivity {
   }
 
   private void addProject(String projectName) {
-    mProjectDbAdapter.createProject(projectName);
+    long projectId = mProjectDbAdapter.createProject(projectName);
     Cursor cursor = mProjectDbAdapter.fetchAllProjects();
     mProjectAdapter.changeCursor(cursor);
-    
-    
+
     Intent projectIntent = new Intent(ProjectListActivity.this, ProjectActivity.class);
-    
-    // TODO: Add the project name and id as extras
-    
+    projectIntent.putExtra(EXTRA_PROJECT_ID, projectId);
     startActivity(projectIntent);
   }
 
@@ -174,7 +168,8 @@ public class ProjectListActivity extends ListActivity {
   // ======================================================================
 
   /**
-   * Create the dialog if it has never been launched Uses a custom dialog layout
+   * Create the dialog if it has never been launched. Uses a custom dialog
+   * layout
    */
   @Override
   protected Dialog onCreateDialog(int id) {

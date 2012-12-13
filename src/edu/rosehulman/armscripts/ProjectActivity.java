@@ -22,11 +22,18 @@ public class ProjectActivity extends Activity implements ActionBar.TabListener {
   private static final int POSITIONS_TAB_INDEX = 0;
   private static final int SCRIPT_EDITOR_INDEX = 1;
   private static final int RUN_INDEX = 2;
+  
+  private long mCurrentProjectId;
+  public long getCurrentProjectId() {
+    return mCurrentProjectId;
+  }
 
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_project);
+    
+    mCurrentProjectId = getIntent().getLongExtra(ProjectListActivity.EXTRA_PROJECT_ID, 1);
 
     // Set up the action bar.
     final ActionBar actionBar = getActionBar();

@@ -19,5 +19,7 @@
     <string name="cancel">Cancel</string>
     <string name="enter_a_project_name">Enter a project name</string>
     <string name="dagu_robot_arm">Dagu robot arm</string>
+    <string name="create_position">Create Position</string>
+    <string name="enter_a_position_name">Enter a position name</string>
 
 </resources>

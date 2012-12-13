@@ -156,6 +156,19 @@ public class PositionDbAdapter {
       contentValues.put(KEY_JOINT_5, joint5);
       return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + positionId, null) > 0;
   }
+
+  /**
+   * Update the position name only.
+   * 
+   * @param positionId id of note to update
+   * @param name value for updated the project name
+   * @return true if the project was successfully updated, false otherwise
+   */
+  public boolean updatePositionName(long positionId, String name) {
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(KEY_NAME, name);
+    return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + positionId, null) > 0;    
+  }
   
   
   private static class PositionDbOpenHelper extends SQLiteOpenHelper {
