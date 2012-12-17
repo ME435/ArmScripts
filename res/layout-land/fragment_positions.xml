@@ -117,7 +117,7 @@
                 android:layout_above="@+id/textview_current_angle"
                 android:layout_marginBottom="70dp"
                 android:max="540"
-                android:progress="318" />
+                android:progress="270" />
 
             <SeekBar
                 android:id="@+id/relative_joint_angle"
@@ -126,15 +126,15 @@
                 android:layout_below="@+id/textview_current_angle"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="70dp"
-                android:max="6"
-                android:progress="3" />
+                android:max="10"
+                android:progress="5" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/absolute_joint_angle"
                 android:layout_alignLeft="@id/absolute_joint_angle"
-                android:text="-270"
+                android:text="@string/absolute_angle_min"
                 android:textColor="@color/angle_seek_bar_labels"
                 android:textSize="@dimen/angle_seek_bar_labels" />
 
@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@id/absolute_joint_angle"
                 android:layout_alignRight="@id/absolute_joint_angle"
-                android:text="+270"
+                android:text="@string/absolute_angle_max"
                 android:textColor="@color/angle_seek_bar_labels"
                 android:textSize="@dimen/angle_seek_bar_labels" />
 
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/relative_joint_angle"
                 android:layout_below="@id/relative_joint_angle"
-                android:text="-3 delta"
+                android:text="@string/relative_angle_min"
                 android:textColor="@color/angle_seek_bar_labels"
                 android:textSize="@dimen/angle_seek_bar_labels" />
 
@@ -161,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/relative_joint_angle"
                 android:layout_below="@id/relative_joint_angle"
-                android:text="+3 delta"
+                android:text="@string/relative_angle_max"
                 android:textColor="@color/angle_seek_bar_labels"
                 android:textSize="@dimen/angle_seek_bar_labels" />
         </RelativeLayout>
@@ -212,7 +212,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/joint_1_title"
                     android:layout_toRightOf="@id/joint_1_title"
-                    android:text="90" />
+                    android:text="@string/unknown_joint_value" />
 
                 <TextView
                     android:id="@+id/joint_2_title"
@@ -228,7 +228,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/joint_2_title"
                     android:layout_toRightOf="@id/joint_2_title"
-                    android:text="0" />
+                    android:text="@string/unknown_joint_value" />
 
                 <TextView
                     android:id="@+id/joint_3_title"
@@ -244,7 +244,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/joint_3_title"
                     android:layout_toRightOf="@id/joint_3_title"
-                    android:text="-90" />
+                    android:text="@string/unknown_joint_value" />
 
                 <TextView
                     android:id="@+id/joint_4_title"
@@ -260,7 +260,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/joint_4_title"
                     android:layout_toRightOf="@id/joint_4_title"
-                    android:text="90" />
+                    android:text="@string/unknown_joint_value" />
 
                 <TextView
                     android:id="@+id/joint_5_title"

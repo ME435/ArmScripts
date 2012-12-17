@@ -12,12 +12,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import edu.rosehulman.armscripts.db.DbOpenHelper;
+import edu.rosehulman.armscripts.db.ProjectDbAdapter;
 
 /**
  * Activity that displays a list view of projects.
@@ -53,7 +54,8 @@ public class ProjectListActivity extends ListActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_project_list);
 
-    mProjectDbAdapter = new ProjectDbAdapter(this);
+    DbOpenHelper.createInstance(this);  // Must run before any DbAdapters are made.
+    mProjectDbAdapter = new ProjectDbAdapter();
     mProjectDbAdapter.open();
 
     Cursor cursor = mProjectDbAdapter.fetchAllProjects();

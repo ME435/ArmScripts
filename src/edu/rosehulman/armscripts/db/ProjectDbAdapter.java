@@ -1,4 +1,4 @@
-package edu.rosehulman.armscripts;
+package edu.rosehulman.armscripts.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 
 /**
@@ -17,52 +16,18 @@ import android.util.Log;
 public class ProjectDbAdapter {
 
   private static final String TAG = "ProjectDbAdapter";
-  private static final String DATABASE_NAME = "projects.db";
-  private static final int DATABASE_VERSION = 1;
-  private static final String TABLE_NAME = "projects";
+  public static final String TABLE_NAME = "projects";
 
   public static final String KEY_ID = "_id";
   public static final String KEY_NAME = "name";
 
   private SQLiteOpenHelper mOpenHelper;
   private SQLiteDatabase mDb;
-  private final Context mContext;
 
-
-  private static class ProjectDbOpenHelper extends SQLiteOpenHelper {
-
-    private static final String CREATE_STATEMENT =
-        "create table " + TABLE_NAME +
-        " (" + KEY_ID + " integer primary key autoincrement, " +
-        KEY_NAME + " text not null);";
-    private static String DROP_STATEMENT = "DROP TABLE IF EXISTS " + TABLE_NAME;
-    
-    ProjectDbOpenHelper(Context context) {
-      super(context, DATABASE_NAME, null, DATABASE_VERSION);
-    }
-
-    @Override
-    public void onCreate(SQLiteDatabase db) {
-      db.execSQL(CREATE_STATEMENT);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-      Log.w(TAG, "Upgrading from version " + oldVersion + " to " + newVersion
-          + ", which will destroy all old table(s).");
-      db.execSQL(DROP_STATEMENT);
-      onCreate(db);
-    }
-  }
-  
   /**
    * Constructor - takes the context to allow the database to be opened/created
-   * 
-   * @param context
-   *          the Context within which to work
    */
-  public ProjectDbAdapter(Context context) {
-    this.mContext = context;
+  public ProjectDbAdapter() {
   }
 
   /**
@@ -76,7 +41,8 @@ public class ProjectDbAdapter {
    *           if the database could be neither opened or created
    */
   public ProjectDbAdapter open() throws SQLException {
-    mOpenHelper = new ProjectDbOpenHelper(mContext);
+//    mOpenHelper = new ProjectDbOpenHelper(mContext);
+    mOpenHelper = DbOpenHelper.getInstance();
     mDb = mOpenHelper.getWritableDatabase();
     return this;
   }
