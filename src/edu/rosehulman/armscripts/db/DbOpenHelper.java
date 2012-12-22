@@ -85,7 +85,8 @@ public class DbOpenHelper extends SQLiteOpenHelper{
       CommandDbAdapter.KEY_DELAY_MS + " integer," +
       CommandDbAdapter.KEY_GRIPPER_DISTANCE + " integer," +
       CommandDbAdapter.KEY_CUSTOM_COMMAND + " integer," +
-      CommandDbAdapter.KEY_ANOTHER_SCRIPT_ID + " integer);";
+      CommandDbAdapter.KEY_ANOTHER_SCRIPT_ID + " integer," +
+      CommandDbAdapter.KEY_DISPLAY_TEXT + " text);";
   private static String DROP_STATEMENT_COMMANDS = "DROP TABLE IF EXISTS " +
       CommandDbAdapter.TABLE_NAME;
   

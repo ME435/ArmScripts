@@ -76,7 +76,6 @@ public class ProjectListActivity extends ListActivity {
         toTextViews);
     setListAdapter(mProjectAdapter);
     registerForContextMenu(getListView());
-
   }
 
   /**
