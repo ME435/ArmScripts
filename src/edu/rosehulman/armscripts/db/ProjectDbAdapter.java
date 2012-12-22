@@ -41,7 +41,6 @@ public class ProjectDbAdapter {
    *           if the database could be neither opened or created
    */
   public ProjectDbAdapter open() throws SQLException {
-//    mOpenHelper = new ProjectDbOpenHelper(mContext);
     mOpenHelper = DbOpenHelper.getInstance();
     mDb = mOpenHelper.getWritableDatabase();
     return this;
@@ -88,8 +87,8 @@ public class ProjectDbAdapter {
   /**
    * Return a Cursor positioned at the project that matches the given projectId
    * 
-   * @param projectId id of note to retrieve
-   * @return Cursor positioned to matching note, if found
+   * @param projectId id of project to retrieve
+   * @return Cursor positioned to matching project, if found
    * @throws SQLException if note could not be found/retrieved
    */
   public Cursor fetchProject(long projectId) throws SQLException {
