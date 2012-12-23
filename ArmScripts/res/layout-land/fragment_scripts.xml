@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <TextView
+            style="@style/BlueHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Script name here"
+            android:textColor="@color/light_blue" />
+
+        <View style="@style/GrayHorizontalLine" />
+
+        <com.mobeta.android.dslv.DragSortListView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:dslv="http://schemas.android.com/apk/res/edu.rosehulman.armscripts"
+            android:id="@+id/listview_script_commands"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:dividerHeight="1dp"
+            android:padding="3dp"
+            dslv:click_remove_id="@id/click_remove"
+            dslv:collapsed_height="1dp"
+            dslv:drag_enabled="true"
+            dslv:drag_handle_id="@id/drag_handle"
+            dslv:drag_scroll_start="0.33"
+            dslv:drag_start_mode="onDown"
+            dslv:float_alpha="0.6"
+            dslv:remove_enabled="true"
+            dslv:remove_mode="clickRemove"
+            dslv:slide_shuffle_speed="0.3" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@color/light_blue" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <TextView
+            style="@style/BlueHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add a position" />
+
+        <View style="@style/GrayHorizontalLine" />
+
+        <ListView
+            android:id="@+id/listview_positions"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@color/light_blue" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/textview_delay_label"
+            style="@style/BlueHeading"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:text="Delay" />
+
+        <EditText
+            android:id="@+id/edittext_delay_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/textview_delay_label"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_toRightOf="@id/textview_delay_label"
+            android:hint="Enter a delay time"
+            android:singleLine="true" />
+
+        <View
+            android:id="@+id/line_below_delay_time"
+            style="@style/GrayHorizontalLine"
+            android:layout_below="@id/edittext_delay_time" />
+
+        <TextView
+            android:id="@+id/gripper_label"
+            style="@style/BlueHeading"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line_below_delay_time"
+            android:text="Gripper" />
+
+        <EditText
+            android:id="@+id/gripper_edittext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/gripper_label"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/gripper_label"
+            android:layout_toRightOf="@id/gripper_label"
+            android:hint="Distance mm"
+            android:singleLine="true" />
+
+        <View
+            android:id="@+id/button_divider"
+            android:layout_width="1dp"
+            android:layout_height="10dp"
+            android:layout_below="@id/gripper_label"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="#800" />
+
+        <Button
+            android:id="@+id/button_gripper_open"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignTop="@id/button_divider"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_toLeftOf="@id/button_divider"
+            android:background="@drawable/green_button"
+            android:text="Open" />
+
+        <Button
+            android:id="@+id/button_gripper_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/button_divider"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_toRightOf="@id/button_divider"
+            android:background="@drawable/red_button"
+            android:text="Close" />
+
+        <View
+            android:id="@+id/line_below_gripper"
+            style="@style/GrayHorizontalLine"
+            android:layout_below="@id/button_gripper_open"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:id="@+id/textview_custom_message"
+            style="@style/BlueHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line_below_gripper"
+            android:text="Custom command" />
+
+        <EditText
+            android:id="@+id/edittext_custom_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textview_custom_message"
+            android:hint="Enter command"
+            android:singleLine="true" />
+
+        <View
+            android:id="@+id/line_custom_message"
+            style="@style/GrayHorizontalLine"
+            android:layout_below="@id/edittext_custom_message" />
+
+        <TextView
+            android:id="@+id/scripts_label"
+            style="@style/BlueHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/line_custom_message"
+            android:text="Add another script" />
+
+        <ListView
+            android:id="@+id/listview_other_scripts"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/scripts_label" />
+    </RelativeLayout>
+
+</LinearLayout>
