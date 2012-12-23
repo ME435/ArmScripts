@@ -5,14 +5,17 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
+import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 import com.mobeta.android.dslv.SimpleDragSortCursorAdapter;
 
@@ -34,6 +37,9 @@ public class ScriptEditorFragment extends Fragment {
   /** Display of commands in this script. */
   private DragSortListView mCommandListView;
 
+  /** Drag controller to allow editing or not. */
+  private DragSortController mCommandDragController;
+  
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -47,8 +53,8 @@ public class ScriptEditorFragment extends Fragment {
     View view = inflater.inflate(R.layout.fragment_scripts, container, false);
     mCommandListView = (DragSortListView) view.findViewById(R.id.listview_script_commands);
 
-    String[] cols = { CommandDbAdapter.KEY_ORDER_INDEX, CommandDbAdapter.KEY_DISPLAY_TEXT };
-    int[] ids = { R.id.temp_order, R.id.text };
+    String[] cols = { CommandDbAdapter.KEY_DISPLAY_TEXT };
+    int[] ids = { R.id.text };
     mCommandListAdapter = new SimpleDragSortCursorAdapter(getActivity(),
         R.layout.list_item_handle_left, null, cols, ids, 0);
     mCommandListView.setAdapter(mCommandListAdapter);
@@ -80,6 +86,54 @@ public class ScriptEditorFragment extends Fragment {
           Cursor cursor = mCommandDbAdapter.fetchAllScriptCommands(mParentProjectId);
           mCommandListAdapter.changeCursor(cursor);
         }
+      }
+    });
+
+    mCommandDragController = buildController(mCommandListView);
+    mCommandListView.setFloatViewManager(mCommandDragController);
+    mCommandListView.setOnTouchListener(mCommandDragController);
+    mCommandListView.setDragEnabled(false);
+
+    ToggleButton editToggle = (ToggleButton) view.findViewById(R.id.toggle_button_edit_commands);
+    editToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+      @Override
+      public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+        mCommandDragController.setRemoveEnabled(isChecked);
+        mCommandDragController.setSortEnabled(isChecked);
+        mCommandListView.setDragEnabled(isChecked);
+        
+        // Setup the list and adapter.
+        Cursor cursor = mCommandDbAdapter.fetchAllScriptCommands(mParentProjectId);
+        String[] cols = { CommandDbAdapter.KEY_DISPLAY_TEXT };
+        int[] ids = { R.id.text };
+
+        if (isChecked) {
+          Log.d(TAG, "Enter edit mode.");
+          mCommandListAdapter = new SimpleDragSortCursorAdapter(getActivity(),
+              R.layout.list_item_click_remove, cursor, cols, ids, 0);
+        } else {          
+          Log.d(TAG, "No editing.");
+          mCommandListAdapter = new SimpleDragSortCursorAdapter(getActivity(),
+              R.layout.list_item_handle_left, cursor, cols, ids, 0);
+        }
+        mCommandListView.setAdapter(mCommandListAdapter);
+        
+        mCommandListView.setDropListener(new DragSortListView.DropListener() {
+          @Override
+          public void drop(int from, int to) {
+            if (from != to) {
+              Log.d(TAG, "Moveeee fromee " + from + " toee " + to);
+              mCommandDbAdapter.moveCommandFromTo(mParentProjectId, from, to);
+              Cursor cursor = mCommandDbAdapter.fetchAllScriptCommands(mParentProjectId);
+              mCommandListAdapter.changeCursor(cursor);
+            }
+          }
+        });
+        
+        // TODO: Do some refactoring and listen to delete events.
+        
       }
     });
     return view;
@@ -115,6 +169,21 @@ public class ScriptEditorFragment extends Fragment {
       return true;
     }
     return super.onContextItemSelected(item);
+  }
+  
+  /**
+   * Called in onCreateView. Override this to provide a custom
+   * DragSortController.
+   */
+  public DragSortController buildController(DragSortListView dslv) {
+      DragSortController controller = new DragSortController(dslv);
+      controller.setDragHandleId(R.id.drag_handle);
+      controller.setClickRemoveId(R.id.click_remove);
+      controller.setRemoveEnabled(false);
+      controller.setSortEnabled(false);
+      controller.setDragInitMode(DragSortController.ON_DOWN);
+      controller.setRemoveMode(DragSortController.CLICK_REMOVE);
+      return controller;
   }
 
   @Override

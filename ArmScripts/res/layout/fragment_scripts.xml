@@ -11,12 +11,33 @@
         android:orientation="vertical"
         android:padding="5dp" >
 
-        <TextView
-            style="@style/BlueHeading"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Script name here"
-            android:textColor="@color/light_blue" />
+            android:layout_height="wrap_content" >
+
+            <TextView
+                style="@style/BlueHeading"
+                android:id="@+id/select_script_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="Script name here"
+                android:textColor="@color/light_blue" />
+
+            <ToggleButton
+                android:id="@+id/toggle_button_edit_commands"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="4dp"
+                android:minHeight="36dip"
+                android:textSize="12sp"
+                android:padding="2dp"
+                android:textOff="Edit"
+                android:textOn="Done" />
+        </RelativeLayout>
 
         <View style="@style/GrayHorizontalLine" />
 
