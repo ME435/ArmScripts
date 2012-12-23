@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/menu_item_position_delete"
-        android:title="Delete positoin">
+        android:title="Delete position">
     </item>
     <item
         android:id="@+id/menu_item_position_edit"

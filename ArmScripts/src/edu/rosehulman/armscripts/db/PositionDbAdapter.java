@@ -129,6 +129,7 @@ public class PositionDbAdapter {
   /**
    * Update the position using the details provided.
    * 
+   * @param positionId id of position to update
    * @param parentProjectId the project name
    * @param name the project name
    * @param joint1 the value for joint1
@@ -154,7 +155,7 @@ public class PositionDbAdapter {
   /**
    * Update the position name only.
    * 
-   * @param positionId id of note to update
+   * @param positionId id of position to update
    * @param name value for updated the project name
    * @return true if the project was successfully updated, false otherwise
    */
@@ -162,6 +163,28 @@ public class PositionDbAdapter {
     ContentValues contentValues = new ContentValues();
     contentValues.put(KEY_NAME, name);
     return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + positionId, null) > 0;    
+  }
+
+  /**
+   * Update the position using the details provided.
+   * 
+   * @param positionId id of position to update
+   * @param joint1 the value for joint1
+   * @param joint2 the value for joint2
+   * @param joint3 the value for joint3
+   * @param joint4 the value for joint4
+   * @param joint5 the value for joint5
+   * @return true if the position was successfully updated, false otherwise
+   */
+  public boolean updatePositionJointValues(long positionId,
+      int joint1, int joint2, int joint3, int joint4, int joint5) {
+      ContentValues contentValues = new ContentValues();
+      contentValues.put(KEY_JOINT_1, joint1);
+      contentValues.put(KEY_JOINT_2, joint2);
+      contentValues.put(KEY_JOINT_3, joint3);
+      contentValues.put(KEY_JOINT_4, joint4);
+      contentValues.put(KEY_JOINT_5, joint5);
+      return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + positionId, null) > 0;
   }
   
   

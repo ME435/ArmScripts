@@ -50,6 +50,7 @@ public class PositionsFragment extends Fragment {
   private Button[] mJointButton = new Button[6];
   private SeekBar mAbsoluteCoarseSeekBar, mRelativeFineSeekBar;
   private TextView mCurrentJointValueTextView;
+  private TextView[] mExistingPositionTextView = new TextView[6];
 
   /** Current robot joint state. */
   private int[] mCurrentJointValues = new int[6];
@@ -71,7 +72,7 @@ public class PositionsFragment extends Fragment {
   private PositionDbAdapter mPositionDbAdapter;
 
   /** Adapter to display positions in the database. */
-  private SimpleCursorAdapter mExistingPositionsAdapter;
+  private SimpleCursorAdapter mPositionsCursorAdapter;
 
   /** Spinner to display positions in the database. */
   private Spinner mExistingPositionsSpinner;
@@ -81,10 +82,15 @@ public class PositionsFragment extends Fragment {
 
   /**
    * Hacky solution to reuse the same dialog for creating AND renaming
-   * positions.
+   * positions.  Set this flag true before launching the dialog and it'll
+   * display a dialog for renaming.  Set this flag false then show the dialog
+   * and it'll display a dialog for a new position.  Hacky but easy.
    */
   private boolean mRenamePosition = false;
 
+  /**
+   * Dialog used when naming a new position OR renaming an existing position.
+   */
   private DialogFragment mCreatePositionDF = new DialogFragment() {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
@@ -126,8 +132,7 @@ public class PositionsFragment extends Fragment {
         }
       });
 
-      // Consider: Done action is inconsistent with how the project naming
-      // works.
+      // Consider: Project renaming is done action is different.
       nameText.setOnEditorActionListener(new OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -144,24 +149,17 @@ public class PositionsFragment extends Fragment {
     };
   };
 
+  /**
+   * Do some of the initialization work that is UI independent.
+   */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     mPositionDbAdapter = new PositionDbAdapter();
     mPositionDbAdapter.open();
     mParentProjectId = ((ProjectActivity) getActivity()).getCurrentProjectId();
-  }
-
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.fragment_positions, container, false);
-  }
-
-  @Override
-  public void onStart() {
-    super.onStart();
-
-    // Default joint values for the home position.
+    
+    // Default joint values for the current robot position.
     // TODO: Make this smarter when you start the fragment.
     // You should request this information from Arduino.
     mCurrentJointValues[0] = 30;
@@ -170,22 +168,38 @@ public class PositionsFragment extends Fragment {
     mCurrentJointValues[3] = 0;
     mCurrentJointValues[4] = -90;
     mCurrentJointValues[5] = 0;
+  }
 
-    // Find view by id for all member variables.
-    mJointButton[1] = (Button) getActivity().findViewById(R.id.current_position_joint_1_button);
-    mJointButton[2] = (Button) getActivity().findViewById(R.id.current_position_joint_2_button);
-    mJointButton[3] = (Button) getActivity().findViewById(R.id.current_position_joint_3_button);
-    mJointButton[4] = (Button) getActivity().findViewById(R.id.current_position_joint_4_button);
-    mJointButton[5] = (Button) getActivity().findViewById(R.id.current_position_joint_5_button);
-    mJointButton[GRIPPER_JOINT_NUMBER] = (Button) getActivity().findViewById(
+  /**
+   * Initialization of this fragment.  Grab all the UI widgets and setup all the listeners.
+   */
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    // Get the view ready.  Usually this is the only task done by onCreateView.
+    View view = inflater.inflate(R.layout.fragment_positions, container, false);
+
+    // Grab member variable references to the view widgets.
+    mJointButton[1] = (Button) view.findViewById(R.id.current_position_joint_1_button);
+    mJointButton[2] = (Button) view.findViewById(R.id.current_position_joint_2_button);
+    mJointButton[3] = (Button) view.findViewById(R.id.current_position_joint_3_button);
+    mJointButton[4] = (Button) view.findViewById(R.id.current_position_joint_4_button);
+    mJointButton[5] = (Button) view.findViewById(R.id.current_position_joint_5_button);
+    mJointButton[GRIPPER_JOINT_NUMBER] = (Button) view.findViewById(
         R.id.current_position_gripper_button);
-    mCurrentJointValueTextView = (TextView) getActivity().findViewById(R.id.textview_current_angle);
-    mAbsoluteCoarseSeekBar = (SeekBar) getActivity().findViewById(R.id.absolute_joint_angle);
-    mRelativeFineSeekBar = (SeekBar) getActivity().findViewById(R.id.relative_joint_angle);
-    mExistingPositionsSpinner = (Spinner) getActivity().findViewById(R.id.position_selector);
+    mCurrentJointValueTextView = (TextView) view.findViewById(R.id.textview_current_angle);
+    mAbsoluteCoarseSeekBar = (SeekBar) view.findViewById(R.id.absolute_joint_angle);
+    mRelativeFineSeekBar = (SeekBar) view.findViewById(R.id.relative_joint_angle);
+    mExistingPositionsSpinner = (Spinner) view.findViewById(R.id.position_selector);
+    // Note: There is no mExistingPositionTextView[0] TextView.
+    mExistingPositionTextView[1] = (TextView) view.findViewById(R.id.joint_1_value);
+    mExistingPositionTextView[2] = (TextView) view.findViewById(R.id.joint_2_value);
+    mExistingPositionTextView[3] = (TextView) view.findViewById(R.id.joint_3_value);
+    mExistingPositionTextView[4] = (TextView) view.findViewById(R.id.joint_4_value);
+    mExistingPositionTextView[5] = (TextView) view.findViewById(R.id.joint_5_value);
 
-    // Create button handler.
-    Button createPositionButton = (Button) getActivity().findViewById(R.id.create_position_button);
+
+    // Create button handler.  Launch the dialog (in create mode) when clicked.
+    Button createPositionButton = (Button) view.findViewById(R.id.create_position_button);
     createPositionButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -195,9 +209,11 @@ public class PositionsFragment extends Fragment {
     });
 
     // Joint buttons in the teach pendant.
+    updateJointButtonText();
     mActiveJoint = 1;
-    highlightJointButton(mJointButton[mActiveJoint]);
+    updatePendantActiveJointChanged();
 
+    // Create the listener that all these buttons will use.
     OnClickListener jointSelector = new View.OnClickListener() {
       @Override
       public void onClick(View v) {
@@ -225,10 +241,8 @@ public class PositionsFragment extends Fragment {
           mActiveJoint = 1;
           break;
         }
-        highlightJointButton((Button) v);
-        updatePendantForActiveJoint();
+        updatePendantActiveJointChanged();
       }
-
     };
     mJointButton[1].setOnClickListener(jointSelector);
     mJointButton[2].setOnClickListener(jointSelector);
@@ -237,9 +251,7 @@ public class PositionsFragment extends Fragment {
     mJointButton[5].setOnClickListener(jointSelector);
     mJointButton[GRIPPER_JOINT_NUMBER].setOnClickListener(jointSelector);
 
-    // Current joint value in the teach pendant.
-    updatePendantForActiveJoint();
-
+    // Setup listeners for the two seek bars (absolute seek bar first).
     mAbsoluteCoarseSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
       @Override
@@ -253,10 +265,11 @@ public class PositionsFragment extends Fragment {
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         mCurrentJointValues[mActiveJoint] = progress - ABSOLUTE_SEEK_BAR_MAX;
-        updateCurrentJointAngleText();
+        updateCurrentJointTextSeekBarChanged();
       }
     });
 
+    // Relative seek bar is a bit more complex because it snaps back to the middle on release.
     mRelativeFineSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
       @Override
       public void onStopTrackingTouch(SeekBar seekBar) {
@@ -268,8 +281,6 @@ public class PositionsFragment extends Fragment {
 
       @Override
       public void onStartTrackingTouch(SeekBar seekBar) {
-        // TODO Auto-generated method stub
-
       }
 
       @Override
@@ -278,61 +289,101 @@ public class PositionsFragment extends Fragment {
         int absoluteBarValue = mCurrentJointValues[mActiveJoint] - mRelativeSeekBarOffset;
         mCurrentJointValues[mActiveJoint] = absoluteBarValue + currentRelativeOffset;
         mRelativeSeekBarOffset = currentRelativeOffset;
-        updateCurrentJointAngleText();
+        updateCurrentJointTextSeekBarChanged();
       }
     });
 
-    // Existing positions spinner.
+    // Existing positions spinner setup to display the existing positions in this project.
+    // Same drill: make a cursor using the DbAdapter, a SimpleCursorAdapter, and tie it to the UI.
     Cursor cursor = mPositionDbAdapter.fetchAllProjectPositions(mParentProjectId);
-    int viewResourceId = R.layout.existing_position_item;
     String[] fromColumns = new String[] { PositionDbAdapter.KEY_NAME };
     int[] toTextViews = new int[] { android.R.id.text1 };
-    mExistingPositionsAdapter = new SimpleCursorAdapter(getActivity(), viewResourceId, cursor,
+    mPositionsCursorAdapter = new SimpleCursorAdapter(getActivity(),
+        R.layout.existing_position_item, cursor,
         fromColumns, toTextViews);
-    mExistingPositionsAdapter
+    mPositionsCursorAdapter
         .setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-    mExistingPositionsSpinner.setAdapter(mExistingPositionsAdapter);
+    mExistingPositionsSpinner.setAdapter(mPositionsCursorAdapter);
     registerForContextMenu(mExistingPositionsSpinner);
 
+    // Listener for the spinner.
+    // When a new position is selected update the text views to display the values.
     mExistingPositionsSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
         mSelectedPositionId = id;
-        Toast.makeText(getActivity(), "Updated selected position id to " + id, Toast.LENGTH_SHORT)
-            .show();
-        updateExistingPositoinJointValues();
+        updateExistingPositionJointValuesSpinnerChanged();
       }
 
       @Override
       public void onNothingSelected(AdapterView<?> arg0) {
-        Toast.makeText(getActivity(), "Nothing selected", Toast.LENGTH_SHORT).show();
         mSelectedPositionId = 0;
-        updateExistingPositoinJointValues();
+        updateExistingPositionJointValuesSpinnerChanged();
       }
     });
-
-    // Update the joint values displayed for the first existing joint.
+    
+    // Go to position button
+    // Make the robot move to this position.
+    // Update the current position member variables.
+    // Update the pendant UI to this new position.
+    Button goToPositionButton = (Button) view.findViewById(R.id.go_to_position_button);
+    goToPositionButton.setOnClickListener(new View.OnClickListener() {
+      
+      @Override
+      public void onClick(View v) {
+        // TODO: Make the robot move.
+        Cursor currentPosition = mPositionDbAdapter.fetchPosition(mSelectedPositionId);
+        int joint1ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_1);
+        int joint2ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_2);
+        int joint3ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_3);
+        int joint4ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_4);
+        int joint5ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_5);
+        mCurrentJointValues[1] = currentPosition.getInt(joint1ColumnIndex);
+        mCurrentJointValues[2] = currentPosition.getInt(joint2ColumnIndex);
+        mCurrentJointValues[3] = currentPosition.getInt(joint3ColumnIndex);
+        mCurrentJointValues[4] = currentPosition.getInt(joint4ColumnIndex);
+        mCurrentJointValues[5] = currentPosition.getInt(joint5ColumnIndex);
+        
+        mActiveJoint = 1;
+        updateJointButtonText();
+        updatePendantActiveJointChanged();
+      }
+    });
+    
+    // Update position button.
+    // Don't move the robot.  Just update the database for this joint to the current values.
+    // And update the text views for the new joint values.
+    Button updatePositionButton = (Button) view.findViewById(R.id.set_position_button);
+    updatePositionButton.setOnClickListener(new View.OnClickListener() {
+      
+      @Override
+      public void onClick(View v) {
+        mPositionDbAdapter.updatePositionJointValues(mSelectedPositionId, 
+            mCurrentJointValues[1],
+            mCurrentJointValues[2],
+            mCurrentJointValues[3],
+            mCurrentJointValues[4],
+            mCurrentJointValues[5]);        
+        updateExistingPositionJointValuesSpinnerChanged();
+      }
+    });
+    
+    // Setup and listeners done.  At last, let the view get returned.
+    return view;
   }
 
-  private void updateExistingPositoinJointValues() {
-    TextView existingPositionJoint1TextView = (TextView) getActivity().findViewById(
-        R.id.joint_1_value);
-    TextView existingPositionJoint2TextView = (TextView) getActivity().findViewById(
-        R.id.joint_2_value);
-    TextView existingPositionJoint3TextView = (TextView) getActivity().findViewById(
-        R.id.joint_3_value);
-    TextView existingPositionJoint4TextView = (TextView) getActivity().findViewById(
-        R.id.joint_4_value);
-    TextView existingPositionJoint5TextView = (TextView) getActivity().findViewById(
-        R.id.joint_5_value);
+  /**
+   * Update the 5 TextViews for the current position in the Spinner.
+   */
+  private void updateExistingPositionJointValuesSpinnerChanged() {
 
     if (mSelectedPositionId == 0) {
       Toast.makeText(getActivity(), "No known positoin to use", Toast.LENGTH_SHORT).show();
-      existingPositionJoint1TextView.setText(getString(R.string.unknown_joint_value));
-      existingPositionJoint2TextView.setText(getString(R.string.unknown_joint_value));
-      existingPositionJoint3TextView.setText(getString(R.string.unknown_joint_value));
-      existingPositionJoint4TextView.setText(getString(R.string.unknown_joint_value));
-      existingPositionJoint5TextView.setText(getString(R.string.unknown_joint_value));
+      mExistingPositionTextView[1].setText(getString(R.string.unknown_joint_value));
+      mExistingPositionTextView[2].setText(getString(R.string.unknown_joint_value));
+      mExistingPositionTextView[3].setText(getString(R.string.unknown_joint_value));
+      mExistingPositionTextView[4].setText(getString(R.string.unknown_joint_value));
+      mExistingPositionTextView[5].setText(getString(R.string.unknown_joint_value));
       return;
     }
 
@@ -342,19 +393,23 @@ public class PositionsFragment extends Fragment {
     int joint3Column = positionSelected.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_3);
     int joint4Column = positionSelected.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_4);
     int joint5Column = positionSelected.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_5);
-    existingPositionJoint1TextView.setText(getString(R.string.degrees_format,
+    mExistingPositionTextView[1].setText(getString(R.string.degrees_format,
         positionSelected.getInt(joint1Column)));
-    existingPositionJoint2TextView.setText(getString(R.string.degrees_format,
+    mExistingPositionTextView[2].setText(getString(R.string.degrees_format,
         positionSelected.getInt(joint2Column)));
-    existingPositionJoint3TextView.setText(getString(R.string.degrees_format,
+    mExistingPositionTextView[3].setText(getString(R.string.degrees_format,
         positionSelected.getInt(joint3Column)));
-    existingPositionJoint4TextView.setText(getString(R.string.degrees_format,
+    mExistingPositionTextView[4].setText(getString(R.string.degrees_format,
         positionSelected.getInt(joint4Column)));
-    existingPositionJoint5TextView.setText(getString(R.string.degrees_format,
+    mExistingPositionTextView[5].setText(getString(R.string.degrees_format,
         positionSelected.getInt(joint5Column)));
   }
 
-  private void updateCurrentJointAngleText() {
+  /**
+   * Update the two places where the active joint value is displayed.  This method is
+   * used when the seek bars are used to change the angle (robot moves).
+   */
+  private void updateCurrentJointTextSeekBarChanged() {
     int jointValue = mCurrentJointValues[mActiveJoint];
     mCurrentJointValueTextView.setText(getString(R.string.degrees_format, jointValue));
     if (mActiveJoint > 0) {
@@ -364,39 +419,45 @@ public class PositionsFragment extends Fragment {
   }
 
   /**
-   * Updates the labels and seek bar values to match the current joint state.
+   * Updates the labels and seek bar values to match the current joint state.  While
+   * similar to the function above, this one is used when we switch joints (robot didn't move).
    */
-  private void updatePendantForActiveJoint() {
+  private void updatePendantActiveJointChanged() {
     int jointValue = mCurrentJointValues[mActiveJoint];
     mCurrentJointValueTextView.setText(getString(R.string.degrees_format, jointValue));
     mAbsoluteCoarseSeekBar.setProgress(jointValue + ABSOLUTE_SEEK_BAR_MAX);
     mRelativeFineSeekBar.setProgress(RELATIVE_SEEK_BAR_MAX);
-  }
-
-  /**
-   * Convenience method for changing which joint is highlight in the teach
-   * pendant.
-   * 
-   * @param activeJointButton
-   *          Button view that needs to be highlighted in the teach pendant
-   *          area.
-   */
-  private void highlightJointButton(Button activeJointButton) {
     mJointButton[1].setBackgroundResource(R.drawable.black_button);
     mJointButton[2].setBackgroundResource(R.drawable.black_button);
     mJointButton[3].setBackgroundResource(R.drawable.black_button);
     mJointButton[4].setBackgroundResource(R.drawable.black_button);
     mJointButton[5].setBackgroundResource(R.drawable.black_button);
     mJointButton[GRIPPER_JOINT_NUMBER].setBackgroundResource(R.drawable.black_button);
-    activeJointButton.setBackgroundResource(R.drawable.yellow_button);
+    // Make the active joint yellow.
+    mJointButton[mActiveJoint].setBackgroundResource(R.drawable.yellow_button);
+    // Set the padding values (not sure why but it's reset when you set the background).
     mJointButton[1].setPadding(60, 0, 0, 0);
     mJointButton[2].setPadding(60, 0, 0, 0);
     mJointButton[3].setPadding(60, 0, 0, 0);
     mJointButton[4].setPadding(60, 0, 0, 0);
     mJointButton[5].setPadding(60, 0, 0, 0);
-    mJointButton[GRIPPER_JOINT_NUMBER].setPadding(50, 0, 0, 0);
+    mJointButton[GRIPPER_JOINT_NUMBER].setPadding(50, 0, 0, 0);  // Joint "0"
   }
 
+
+  // Update the text on all the joint buttons.
+  private void updateJointButtonText() {
+    mJointButton[1].setText(getString(R.string.joint_label_format, 1,
+        mCurrentJointValues[1]));
+    mJointButton[2].setText(getString(R.string.joint_label_format, 2,
+        mCurrentJointValues[2]));
+    mJointButton[3].setText(getString(R.string.joint_label_format, 3,
+        mCurrentJointValues[3]));
+    mJointButton[4].setText(getString(R.string.joint_label_format, 4,
+        mCurrentJointValues[4]));
+    mJointButton[5].setText(getString(R.string.joint_label_format, 5,
+        mCurrentJointValues[5]));
+  }
   /**
    * Create a context menu for the list view.
    */
@@ -423,7 +484,7 @@ public class PositionsFragment extends Fragment {
       mPositionDbAdapter.deletePosition(mSelectedPositionId);
       mSelectedPositionId = 0;
       Cursor cursor = mPositionDbAdapter.fetchAllProjectPositions(mParentProjectId);
-      mExistingPositionsAdapter.changeCursor(cursor);
+      mPositionsCursorAdapter.changeCursor(cursor);
       return true;
     case R.id.menu_item_position_edit:
       mRenamePosition = true;
@@ -438,7 +499,7 @@ public class PositionsFragment extends Fragment {
         mCurrentJointValues[1], mCurrentJointValues[2], mCurrentJointValues[3],
         mCurrentJointValues[4], mCurrentJointValues[5]);
     Cursor cursor = mPositionDbAdapter.fetchAllProjectPositions(mParentProjectId);
-    mExistingPositionsAdapter.changeCursor(cursor);
+    mPositionsCursorAdapter.changeCursor(cursor);
 
     // Set the spinner to the newest position
     for (int i = 0; i < mExistingPositionsSpinner.getCount(); i++) {
@@ -453,7 +514,7 @@ public class PositionsFragment extends Fragment {
   private void editPositionName(String positionName) {
     mPositionDbAdapter.updatePositionName(mSelectedPositionId, positionName);
     Cursor cursor = mPositionDbAdapter.fetchAllProjectPositions(mParentProjectId);
-    mExistingPositionsAdapter.changeCursor(cursor);
+    mPositionsCursorAdapter.changeCursor(cursor);
   }
 
   @Override
