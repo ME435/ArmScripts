@@ -1,6 +1,7 @@
 package edu.rosehulman.armscripts;
 
 import android.app.Dialog;
+import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -19,6 +20,7 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import edu.rosehulman.armscripts.db.DbOpenHelper;
 import edu.rosehulman.armscripts.db.ProjectDbAdapter;
+import edu.rosehulman.armscripts.db.ScriptDbAdapter;
 
 /**
  * Activity that displays a list view of projects.
@@ -29,10 +31,9 @@ public class ProjectListActivity extends ListActivity {
 
   public static final String TAG = "ProjectList";
   public static final String EXTRA_PROJECT_ID = "extra_project_id";
-  /**
-   * Dialog ID for adding and editing projects (one dialog for both tasks)
-   */
-  private static final int DIALOG_ID = 1;
+  /** Dialog ID for adding and editing projects (one dialog for both tasks). */
+  private static final int PROJECT_NAME_DIALOG_ID = 1;
+  private static final int PROJECT_DELETE_DIALOG_ID = 2;
 
   /**
    * Constant to indicate that no row is selected for editing. Used when adding
@@ -65,7 +66,7 @@ public class ProjectListActivity extends ListActivity {
       @Override
       public void onClick(View v) {
         mSelectedId = NO_ID_SELECTED;
-        showDialog(DIALOG_ID);
+        showDialog(PROJECT_NAME_DIALOG_ID);
       }
     });
     // Make the adapter even if the cursor is empty to prepare for first item.
@@ -102,7 +103,7 @@ public class ProjectListActivity extends ListActivity {
     switch (item.getItemId()) {
     case R.id.add_project:
       mSelectedId = NO_ID_SELECTED;
-      showDialog(DIALOG_ID);
+      showDialog(PROJECT_NAME_DIALOG_ID);
       return true;
     }
     return super.onOptionsItemSelected(item);
@@ -126,15 +127,13 @@ public class ProjectListActivity extends ListActivity {
   @Override
   public boolean onContextItemSelected(MenuItem item) {
     AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+    mSelectedId = info.id;
     switch (item.getItemId()) {
     case R.id.menu_item_list_view_delete:
-      mProjectDbAdapter.deleteProject(info.id);
-      Cursor cursor = mProjectDbAdapter.fetchAllProjects();
-      mProjectAdapter.changeCursor(cursor);
+      showDialog(PROJECT_DELETE_DIALOG_ID);
       return true;
     case R.id.menu_item_list_view_edit:
-      mSelectedId = info.id;
-      showDialog(DIALOG_ID);
+      showDialog(PROJECT_NAME_DIALOG_ID);
       return true;
     }
     return super.onContextItemSelected(item);
@@ -177,7 +176,7 @@ public class ProjectListActivity extends ListActivity {
     super.onCreateDialog(id);
     final Dialog dialog = new Dialog(this);
     switch (id) {
-    case DIALOG_ID:
+    case PROJECT_NAME_DIALOG_ID:
       dialog.setContentView(R.layout.project_name_dialog);
       dialog.setTitle("New Project");
 
@@ -205,6 +204,33 @@ public class ProjectListActivity extends ListActivity {
         }
       });
       break;
+    case PROJECT_DELETE_DIALOG_ID:
+      dialog.setContentView(R.layout.delete_project_dialog);
+      Cursor cursorForSelectedProject = mProjectDbAdapter.fetchProject(mSelectedId);
+      int nameColumn = cursorForSelectedProject.getColumnIndexOrThrow(ProjectDbAdapter.KEY_NAME);
+      String selectedProjectName = cursorForSelectedProject.getString(nameColumn);
+      dialog.setTitle("Are you sure you wish to delete " + selectedProjectName + "?");
+      
+      final Button confirmDeleteButton = (Button) dialog.findViewById(R.id.confirm_delete_project_button);
+      final Button cancelDeleteButton = (Button) dialog.findViewById(R.id.cancel_delete_project_button);
+
+      confirmDeleteButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          mProjectDbAdapter.deleteProject(mSelectedId);
+          Cursor cursor = mProjectDbAdapter.fetchAllProjects();
+          mProjectAdapter.changeCursor(cursor);
+          dialog.dismiss();
+        }
+      });
+
+      cancelDeleteButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          dialog.dismiss();
+        }
+      });
+      break;
     default:
       break;
     }
@@ -219,7 +245,7 @@ public class ProjectListActivity extends ListActivity {
   protected void onPrepareDialog(int id, Dialog dialog) {
     super.onPrepareDialog(id, dialog);
     switch (id) {
-    case DIALOG_ID:
+    case PROJECT_NAME_DIALOG_ID:
       final EditText nameText = (EditText) dialog.findViewById(R.id.edittext_project_name);
       final Button confirmButton = (Button) dialog.findViewById(R.id.confirm_project_name_button);
       if (mSelectedId == NO_ID_SELECTED) {

@@ -15,29 +15,34 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
 
-            <TextView
-                style="@style/BlueHeading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:text="Script name here"
-                android:textColor="@color/light_blue" />
-
             <ToggleButton
                 android:id="@+id/toggle_button_edit_commands"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="2dp"
                 android:minHeight="36dip"
-                android:layout_marginTop="4dp"
-                android:padding="0dp"
+                android:padding="2dp"
                 android:textOff="Edit"
                 android:textOn="Done"
-                android:textSize="10sp" />
+                android:textSize="16sp" />
 
+            <Spinner
+                android:id="@+id/select_script_spinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_toLeftOf="@id/toggle_button_edit_commands"
+                android:background="@drawable/black_button"
+                android:minHeight="12dp"
+                android:paddingBottom="0dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="0dp"
+                android:paddingTop="0dp" />
         </RelativeLayout>
+
         <View style="@style/GrayHorizontalLine" />
 
         <com.mobeta.android.dslv.DragSortListView
@@ -107,7 +112,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:text="Delay" />
-
+
         <EditText
             android:id="@+id/edittext_delay_time"
             android:layout_width="0dp"
@@ -117,6 +122,8 @@
             android:layout_marginBottom="5dp"
             android:layout_toRightOf="@id/textview_delay_label"
             android:hint="Enter a delay time"
+            android:imeOptions="actionDone"
+            android:inputType="number"
             android:singleLine="true" />
 
         <View
@@ -131,7 +138,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/line_below_delay_time"
             android:text="Gripper" />
-
+
         <EditText
             android:id="@+id/gripper_edittext"
             android:layout_width="wrap_content"
@@ -141,6 +148,8 @@
             android:layout_below="@id/gripper_label"
             android:layout_toRightOf="@id/gripper_label"
             android:hint="Distance mm"
+            android:imeOptions="actionDone"
+            android:inputType="numberSigned"
             android:singleLine="true" />
 
         <View
@@ -189,27 +198,29 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/line_below_gripper"
             android:text="Custom command" />
-
+
         <EditText
             android:id="@+id/edittext_custom_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/textview_custom_message"
             android:hint="Enter command"
+            android:imeOptions="actionDone"
+            android:inputType="textCapCharacters"
             android:singleLine="true" />
 
         <View
             android:id="@+id/line_custom_message"
             style="@style/GrayHorizontalLine"
             android:layout_below="@id/edittext_custom_message" />
-
+
         <TextView
             android:id="@+id/scripts_label"
             style="@style/BlueHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/line_custom_message"
-            android:text="Add another script" />
+            android:text="Call another script" />
 
         <ListView
             android:id="@+id/listview_other_scripts"

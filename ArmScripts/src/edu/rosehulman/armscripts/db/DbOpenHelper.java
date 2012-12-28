@@ -9,7 +9,7 @@ public class DbOpenHelper extends SQLiteOpenHelper{
   
   private static final String TAG = "DbOpenHelper";
   private static final String DATABASE_NAME = "arm_scripts.db";
-  private static final int DATABASE_VERSION = 2;
+  private static final int DATABASE_VERSION = 4;
 
   private static DbOpenHelper sSingleton = null;
   private static final String MOCK_DATABASE_NAME = "mock_arm_scripts.db";

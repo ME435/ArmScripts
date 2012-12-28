@@ -104,15 +104,15 @@ public class ScriptDbAdapter {
   /**
    * Return a Cursor positioned at the position that matches the given position id
    * 
-   * @param positionId id of position to retrieve
+   * @param scriptId id of position to retrieve
    * @return Cursor positioned to matching position, if found
    * @throws SQLException if note could not be found/retrieved
    */
-  public Cursor fetchScript(long positionId) throws SQLException {
+  public Cursor fetchScript(long scriptId) throws SQLException {
       Cursor cursor =
           mDb.query(true, TABLE_NAME, 
               new String[] {KEY_ID, KEY_PARENT_PROJECT_ID, KEY_NAME},
-              KEY_ID + "=" + positionId, null, null, null, null, null);
+              KEY_ID + "=" + scriptId, null, null, null, null, null);
       if (cursor != null) {
         cursor.moveToFirst();
       }
@@ -126,25 +126,24 @@ public class ScriptDbAdapter {
    * @param name the script name
    * @return true if the position was successfully updated, false otherwise
    */
-  public boolean updateScript(long positionId, long parentProjectId, String name,
-      int joint1, int joint2, int joint3, int joint4, int joint5) {
+  public boolean updateScript(long scriptId, long parentProjectId, String name) {
       ContentValues contentValues = new ContentValues();
       contentValues.put(KEY_PARENT_PROJECT_ID, parentProjectId);
       contentValues.put(KEY_NAME, name);
-      return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + positionId, null) > 0;
+      return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + scriptId, null) > 0;
   }
 
   /**
    * Update the position name only.
    * 
-   * @param positionId id of note to update
+   * @param scriptId id of note to update
    * @param name value for updated the project name
    * @return true if the project was successfully updated, false otherwise
    */
-  public boolean updateScriptName(long positionId, String name) {
+  public boolean updateScriptName(long scriptId, String name) {
     ContentValues contentValues = new ContentValues();
     contentValues.put(KEY_NAME, name);
-    return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + positionId, null) > 0;    
+    return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + scriptId, null) > 0;    
   }
   
   

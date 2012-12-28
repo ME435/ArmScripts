@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/select_script_context_delete"
+        android:title="Delete this script">
+    </item>
+    <item
+        android:id="@+id/select_script_context_edit"
+        android:title="Edit the script name">
+    </item>
+
+</menu>

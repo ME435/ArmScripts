@@ -5,10 +5,10 @@
 	android:layout_height="wrap_content"
 	android:orientation="vertical">
 	<EditText
-		android:id="@+id/edittext_position_name"
+		android:id="@+id/edittext_script_name"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:hint="@string/enter_a_position_name"
+		android:hint="Enter a script name"
 		android:layout_margin="10dp"
 		android:inputType="text"
 		android:imeOptions="actionDone"
@@ -19,16 +19,16 @@
 		android:orientation="horizontal"
 		android:gravity="center">
 		<Button
-			android:id="@+id/cancel_position_name_button"
+			android:id="@+id/cancel_script_name_button"
 			android:layout_width="0dp"
 			android:layout_weight="1"
 			android:layout_height="wrap_content"
 			android:text="@string/cancel"/>
 		<Button
-			android:id="@+id/confirm_position_name_button"
+			android:id="@+id/confirm_script_name_button"
 			android:layout_width="0dp"
 			android:layout_weight="1"
 			android:layout_height="wrap_content"
-			android:text="@string/create_position"/>
+			android:text="Create Script"/>
 	</LinearLayout>
 </LinearLayout>

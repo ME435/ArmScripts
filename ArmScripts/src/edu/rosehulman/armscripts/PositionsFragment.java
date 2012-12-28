@@ -97,9 +97,9 @@ public class PositionsFragment extends Fragment {
       final Dialog dialog = new Dialog(getActivity());
       dialog.setContentView(R.layout.position_name_dialog);
 
-      final EditText nameText = (EditText) dialog.findViewById(R.id.edittext_project_name);
-      final Button confirmButton = (Button) dialog.findViewById(R.id.confirm_project_name_button);
-      final Button cancelButton = (Button) dialog.findViewById(R.id.cancel_project_name_button);
+      final EditText nameText = (EditText) dialog.findViewById(R.id.edittext_position_name);
+      final Button confirmButton = (Button) dialog.findViewById(R.id.confirm_position_name_button);
+      final Button cancelButton = (Button) dialog.findViewById(R.id.cancel_position_name_button);
       if (mRenamePosition) {
         dialog.setTitle("Edit the position name");
         Cursor positionSelected = mPositionDbAdapter.fetchPosition(mSelectedPositionId);
@@ -368,7 +368,6 @@ public class PositionsFragment extends Fragment {
       }
     });
     
-    // Setup and listeners done.  At last, let the view get returned.
     return view;
   }
 
@@ -475,10 +474,6 @@ public class PositionsFragment extends Fragment {
    */
   @Override
   public boolean onContextItemSelected(MenuItem item) {
-    Cursor positionSelected = mPositionDbAdapter.fetchPosition(mSelectedPositionId);
-    int nameColumn = positionSelected.getColumnIndexOrThrow(PositionDbAdapter.KEY_NAME);
-    String name = positionSelected.getString(nameColumn);
-
     switch (item.getItemId()) {
     case R.id.menu_item_position_delete:
       mPositionDbAdapter.deletePosition(mSelectedPositionId);

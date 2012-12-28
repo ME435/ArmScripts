@@ -40,7 +40,7 @@ public class CommandDbAdapter {
       KEY_DELAY_MS, KEY_GRIPPER_DISTANCE, KEY_CUSTOM_COMMAND,
       KEY_ANOTHER_SCRIPT_ID, KEY_DISPLAY_TEXT };
 
-  private static final String[] PROJECTION_DISPLAY_TEXT = new String[] { KEY_DISPLAY_TEXT };
+  private static final String[] PROJECTION_DISPLAY_TEXT = new String[] { KEY_ID, KEY_DISPLAY_TEXT };
 
   private SQLiteOpenHelper mOpenHelper;
   private SQLiteDatabase mDb;
@@ -109,31 +109,31 @@ public class CommandDbAdapter {
     switch (type) {
     case POSITION:
       initialValues.put(KEY_POSITION_ID, longValue);
-      initialValues.put(KEY_DISPLAY_TEXT, "Position " + longValue);
+      initialValues.put(KEY_DISPLAY_TEXT, "Position: " + stringValue);
       break;
     case DELAY:
       initialValues.put(KEY_DELAY_MS, longValue);
-      initialValues.put(KEY_DISPLAY_TEXT, "Delay " + longValue + " ms");
+      initialValues.put(KEY_DISPLAY_TEXT, "Delay: " + longValue + " ms");
       break;
     case GRIPPER:
       if (longValue <= 0) {
         initialValues.put(KEY_GRIPPER_DISTANCE, longValue);
-        initialValues.put(KEY_DISPLAY_TEXT, "Gripper close");
+        initialValues.put(KEY_DISPLAY_TEXT, "Gripper: Close");
       } else if (longValue >= LARGEST_OPEN_GRIPPER_VALUE) {
         initialValues.put(KEY_GRIPPER_DISTANCE, LARGEST_OPEN_GRIPPER_VALUE);
-        initialValues.put(KEY_DISPLAY_TEXT, "Gripper open");
+        initialValues.put(KEY_DISPLAY_TEXT, "Gripper: Open");
       } else {
         initialValues.put(KEY_GRIPPER_DISTANCE, longValue);
-        initialValues.put(KEY_DISPLAY_TEXT, "Gripper " + longValue + " mm");
+        initialValues.put(KEY_DISPLAY_TEXT, "Gripper: " + longValue + "mm");
       }
       break;
     case CUSTOM:
       initialValues.put(KEY_CUSTOM_COMMAND, stringValue);
-      initialValues.put(KEY_DISPLAY_TEXT, "Custom " + stringValue);
+      initialValues.put(KEY_DISPLAY_TEXT, "Custom: " + stringValue);
       break;
     case SCRIPT:
       initialValues.put(KEY_ANOTHER_SCRIPT_ID, longValue);
-      initialValues.put(KEY_DISPLAY_TEXT, "Script " + longValue);
+      initialValues.put(KEY_DISPLAY_TEXT, "Script: " + stringValue);
       break;
     default:
       break;
