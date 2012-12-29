@@ -288,5 +288,69 @@ public class CommandDbAdapter {
     return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + commandId,
         null) > 0;
   }
+
+  /**
+   * Update the delay time.
+   * Note, the display text assumes this is a delay command.
+   * 
+   * @param commandId
+   *            id of command to update
+   * @param newDelayTime
+   *            new delay time value in milliseconds
+   * @return true if the project was successfully updated, false otherwise
+   */
+  public boolean updateDelayCommandTime(long commandId, int newDelayTime) {
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(KEY_DELAY_MS, newDelayTime);
+    contentValues.put(KEY_DISPLAY_TEXT, "Delay: " + newDelayTime + " ms");
+    return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + commandId,
+        null) > 0;
+  }
+
+  /**
+   * Update the gripper distance.
+   * Note, the display text assumes this is a gripper command.
+   * 
+   * @param commandId
+   *            id of command to update
+   * @param newGripperDistance
+   *            new gripper distance in millimeters
+   * @return true if the project was successfully updated, false otherwise
+   */
+  public boolean updateGripperCommandDistance(long commandId, int newGripperDistance) {
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(KEY_GRIPPER_DISTANCE, newGripperDistance);
+    contentValues.put(KEY_DISPLAY_TEXT, "Gripper: " + newGripperDistance);
+    if (newGripperDistance <= 0) {
+      contentValues.put(KEY_GRIPPER_DISTANCE, newGripperDistance);
+      contentValues.put(KEY_DISPLAY_TEXT, "Gripper: Close");
+    } else if (newGripperDistance >= LARGEST_OPEN_GRIPPER_VALUE) {
+      contentValues.put(KEY_GRIPPER_DISTANCE, LARGEST_OPEN_GRIPPER_VALUE);
+      contentValues.put(KEY_DISPLAY_TEXT, "Gripper: Open");
+    } else {
+      contentValues.put(KEY_GRIPPER_DISTANCE, newGripperDistance);
+      contentValues.put(KEY_DISPLAY_TEXT, "Gripper: " + newGripperDistance + "mm");
+    }
+    return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + commandId,
+        null) > 0;
+  }
+
+  /**
+   * Update the custom command message.
+   * Note, the display text assumes this is a custom command.
+   * 
+   * @param commandId
+   *            id of command to update
+   * @param newCustomCommand
+   *            new message to send
+   * @return true if the project was successfully updated, false otherwise
+   */
+  public boolean updateCustomCommand(long commandId, String newCustomCommand) {
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(KEY_CUSTOM_COMMAND, newCustomCommand);
+    contentValues.put(KEY_DISPLAY_TEXT, "Custom: " + newCustomCommand);
+    return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + commandId,
+        null) > 0;
+  }
 }
 

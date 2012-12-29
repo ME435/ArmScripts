@@ -4,8 +4,8 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -25,13 +26,12 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.mobeta.android.dslv.DragSortController;
@@ -180,6 +180,121 @@ public class ScriptEditorFragment extends Fragment {
     };
   };
 
+  /** Current command selected for editing. */
+  private long mSelectedCommandId = 0;
+
+  /**
+   * This member variable is just being lazy. Didn't want to figure it out a
+   * second time within the dialog fragment. This is one strike against not
+   * using the layer of abstraction approach (ie making a Command POJO).
+   */
+  private CommandDbAdapter.Type mSelectedCommandType = CommandDbAdapter.Type.POSITION;
+
+  /**
+   * Dialog used when editing a command.
+   */
+  private DialogFragment mEditCommandDF = new DialogFragment() {
+
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+      final Dialog dialog = new Dialog(getActivity());
+      dialog.setContentView(R.layout.command_edit_dialog);
+
+      final EditText commandValueEditText = (EditText) dialog
+          .findViewById(R.id.edittext_command_value);
+      final Button confirmButton = (Button) dialog.findViewById(R.id.confirm_command_update_button);
+      final Button cancelButton = (Button) dialog.findViewById(R.id.cancel_command_update_button);
+
+      // Get the command type and value as appropriate.
+      Cursor commandCursor = mCommandDbAdapter.fetchCommand(mSelectedCommandId);
+      switch (mSelectedCommandType) {
+      case DELAY:
+        dialog.setTitle("Set a new delay time (in milliseconds)");
+        // commandValueEditText.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
+        int delayColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_DELAY_MS);
+        int delayValue = commandCursor.getInt(delayColumn);
+        commandValueEditText.setText("" + delayValue);
+        break;
+      case GRIPPER:
+        dialog.setTitle("New gripper distance in millimeters (0 to 100)");
+        // commandValueEditText.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
+        int gripperColumn = commandCursor
+            .getColumnIndexOrThrow(CommandDbAdapter.KEY_GRIPPER_DISTANCE);
+        int gripperValue = commandCursor.getInt(gripperColumn);
+        commandValueEditText.setText("" + gripperValue);
+        break;
+      case CUSTOM:
+        dialog.setTitle("Enter a new custom command");
+        // commandValueEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+        int customColumn = commandCursor
+            .getColumnIndexOrThrow(CommandDbAdapter.KEY_CUSTOM_COMMAND);
+        String customText = commandCursor.getString(customColumn);
+        commandValueEditText.setText(customText);
+        break;
+      default:
+        Log.w(TAG, "Attempt to edit an uneditable command type.");
+        break;
+      }
+
+      confirmButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          String commandStrValue = commandValueEditText.getText().toString();
+          switch (mSelectedCommandType) {
+          case DELAY:
+            try {
+              int newDelayValue = Integer.valueOf(commandStrValue);
+              mCommandDbAdapter.updateDelayCommandTime(mSelectedCommandId, newDelayValue);
+            } catch (Exception e) {
+              Toast.makeText(getActivity(), "Invalid delay value", Toast.LENGTH_SHORT).show();
+            }
+            break;
+          case GRIPPER:
+            try {
+              int newGripperValue = Integer.valueOf(commandStrValue);
+              mCommandDbAdapter.updateGripperCommandDistance(mSelectedCommandId, newGripperValue);
+            } catch (Exception e) {
+              Toast.makeText(getActivity(), "Invalid gripper value", Toast.LENGTH_SHORT).show();
+            }
+            break;
+          case CUSTOM:
+            mCommandDbAdapter.updateCustomCommand(mSelectedCommandId, commandStrValue);
+            break;
+          default:
+            Log.w(TAG, "Attempt to edit an uneditable command type.");
+            break;
+          }
+          refreshCommandList();
+
+          dialog.dismiss();
+        }
+      });
+
+      cancelButton.setOnClickListener(new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          dialog.dismiss();
+        }
+      });
+
+      // Consider: Project renaming is done action is different.
+      // commandValueEditText.setOnEditorActionListener(new
+      // OnEditorActionListener() {
+      // @Override
+      // public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+      // {
+      // if (EditorInfo.IME_ACTION_DONE == actionId) {
+      // dialog.dismiss();
+      // }
+      // return false;
+      // }
+      // });
+
+      return dialog;
+    };
+
+  };
+
   private DragSortListView.DropListener mDslvDropListener = new DragSortListView.DropListener() {
     @Override
     public void drop(int from, int to) {
@@ -190,17 +305,17 @@ public class ScriptEditorFragment extends Fragment {
       }
     }
   };
-  
+
   private DragSortListView.RemoveListener mDslvRemoveListener = new DragSortListView.RemoveListener() {
-    
+
     @Override
     public void remove(int which) {
-      //mCommandDbAdapter.deleteCommand(which);
+      // mCommandDbAdapter.deleteCommand(which);
       long commandIdToRemove = mCommandListView.getItemIdAtPosition(which);
       Log.d(TAG, "Remove which = " + which + "   id = " + commandIdToRemove);
       mCommandDbAdapter.deleteCommand(commandIdToRemove);
       refreshCommandList();
-      
+
     }
   };
 
@@ -275,6 +390,22 @@ public class ScriptEditorFragment extends Fragment {
     mCommandListView.setFloatViewManager(mCommandDragController);
     mCommandListView.setOnTouchListener(mCommandDragController);
     mCommandListView.setDragEnabled(false);
+
+    mCommandListView.setOnItemClickListener(new OnItemClickListener() {
+      @Override
+      public void onItemClick(AdapterView<?> parent, View view, int position, long commandId) {
+        mSelectedCommandId = commandId;
+        
+        // I may change my mind on this.  
+        // For delay command only ALWAYS launch the editor on a single tap.
+        Cursor commandCursor = mCommandDbAdapter.fetchCommand(mSelectedCommandId);
+        int typeColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_TYPE);
+        String type = commandCursor.getString(typeColumn);
+        if (type.equals(CommandDbAdapter.Type.DELAY.toString())) {
+          editSelectedCommand();
+        }
+      }
+    });
 
     ToggleButton editToggle = (ToggleButton) view.findViewById(R.id.toggle_button_edit_commands);
     editToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -390,8 +521,7 @@ public class ScriptEditorFragment extends Fragment {
     gripperCloseButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.GRIPPER,
-            0, "");
+        mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.GRIPPER, 0, "");
         refreshCommandList();
       }
     });
@@ -404,10 +534,10 @@ public class ScriptEditorFragment extends Fragment {
       public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (EditorInfo.IME_ACTION_DONE == actionId) {
           String customCommandText = customCommandEditText.getText().toString();
-          
-            mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.CUSTOM,
-                0, customCommandText);
-            refreshCommandList();
+          mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.CUSTOM, 0,
+              customCommandText);
+          customCommandEditText.setText("");
+          refreshCommandList();
         }
         return false;
       }
@@ -423,7 +553,7 @@ public class ScriptEditorFragment extends Fragment {
         android.R.layout.simple_list_item_1, callScriptCursor, callScriptColumns,
         callScriptTextViews);
     mCallScriptListView.setAdapter(mCallScriptCursorAdapter);
-    
+
     mCallScriptListView.setOnItemClickListener(new OnItemClickListener() {
 
       @Override
@@ -431,12 +561,12 @@ public class ScriptEditorFragment extends Fragment {
         Cursor scriptCursor = mScriptDbAdapter.fetchScript(scriptId);
         int nameCol = scriptCursor.getColumnIndexOrThrow(PositionDbAdapter.KEY_NAME);
         String scriptName = scriptCursor.getString(nameCol);
-        mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.SCRIPT,
-            scriptId, scriptName);
+        mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.SCRIPT, scriptId,
+            scriptName);
         refreshCommandList();
       }
     });
-    
+
     return view;
   }
 
@@ -511,7 +641,8 @@ public class ScriptEditorFragment extends Fragment {
       refreshCommandList();
       return true;
     case R.id.script_command_context_edit:
-      Log.d(TAG, "You wish to edit this command.  Good for you.");
+      mSelectedCommandId = info.id;
+      editSelectedCommand();
       return true;
     case R.id.select_script_context_delete:
       // To delete the script we use an Are you sure box.
@@ -523,6 +654,35 @@ public class ScriptEditorFragment extends Fragment {
       return true;
     }
     return super.onContextItemSelected(item);
+  }
+
+  /**
+   * Launch the dialog for the selected command if appropriate.
+   */
+  private void editSelectedCommand() {
+    // For simplicity only allow a user to edit the three edit text commands.
+    // For the list view commands just show a toast message to delete it.
+    Cursor commandCursor = mCommandDbAdapter.fetchCommand(mSelectedCommandId);
+    int typeColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_TYPE);
+    String type = commandCursor.getString(typeColumn);
+    if (type.equals(CommandDbAdapter.Type.POSITION.toString())) {
+      Toast.makeText(getActivity(), "Delete this position then add a new position",
+          Toast.LENGTH_LONG).show();
+    } else if (type.equals(CommandDbAdapter.Type.DELAY.toString())) {
+      mSelectedCommandType = CommandDbAdapter.Type.DELAY;
+      mEditCommandDF.show(getFragmentManager(), "update delay command");
+    } else if (type.equals(CommandDbAdapter.Type.GRIPPER.toString())) {
+      mSelectedCommandType = CommandDbAdapter.Type.GRIPPER;
+      mEditCommandDF.show(getFragmentManager(), "update gripper command");
+    } else if (type.equals(CommandDbAdapter.Type.CUSTOM.toString())) {
+      mSelectedCommandType = CommandDbAdapter.Type.CUSTOM;
+      mEditCommandDF.show(getFragmentManager(), "update custom command");
+    } else if (type.equals(CommandDbAdapter.Type.SCRIPT.toString())) {
+      Toast.makeText(getActivity(), "Delete this script then add a new script", Toast.LENGTH_LONG)
+          .show();
+    } else {
+      Log.w(TAG, "Attempt to edit and unknown type.");
+    }
   }
 
   /**
