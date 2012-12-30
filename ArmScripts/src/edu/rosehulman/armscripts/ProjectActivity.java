@@ -1,7 +1,6 @@
 package edu.rosehulman.armscripts;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -13,10 +12,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-//import android.support.v4.app.Fragment;
-//import android.support.v4.app.FragmentActivity;
 
-public class ProjectActivity extends Activity implements ActionBar.TabListener {
+
+public class ProjectActivity extends AccessoryActivity implements ActionBar.TabListener {
 
   private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
   private static final int POSITIONS_TAB_INDEX = 0;
@@ -87,7 +85,6 @@ public class ProjectActivity extends Activity implements ActionBar.TabListener {
   @Override
   public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     // When the given tab is selected, show the tab contents in the container
-
     Fragment fragment = new DummySectionFragment();
     switch (tab.getPosition()) {
     case POSITIONS_TAB_INDEX:

@@ -1,5 +1,4 @@
 <resources>
-
     <string name="tab_title_run">Run</string>
     <string name="tab_title_scripts">Scripts</string>
     <string name="tab_title_positions">Positions</string>
@@ -12,7 +11,7 @@
         If you are not one of those lucky people you should remove this app.
         Assuming you are in the course connect your robot arm and get started.</string>
     <string name="get_started">Get Started</string>
-    <string name="title_activity_project_list">Robotics Engineering</string>
+    <string name="title_activity_project_list">ME435</string>
     <string name="add_project">Add Project</string>
     <string name="delete_project">Delete Project</string>
     <string name="edit_project_name">Edit Project Name</string>

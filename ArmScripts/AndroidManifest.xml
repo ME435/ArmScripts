@@ -7,16 +7,28 @@
         android:minSdkVersion="16"
         android:targetSdkVersion="16" />
 
+    <uses-feature
+        android:name="android.hardware.usb.accessory"
+        android:required="true" />
+
     <application
         android:icon="@drawable/roselogo"
-        android:label="@string/me435">
+        android:label="@string/me435" >
         <activity
             android:name=".ProjectListActivity"
-            android:label="@string/title_activity_project_list" >
-             <intent-filter>
+            android:label="@string/me435" >
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+                android:resource="@xml/usb_accessory_filter" />
         </activity>
         <activity
             android:name=".ProjectActivity"

@@ -19,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import edu.rosehulman.armscripts.db.CommandDbAdapter;
+import edu.rosehulman.armscripts.db.PositionDbAdapter;
 import edu.rosehulman.armscripts.db.ScriptDbAdapter;
 
 public class RunFragment extends Fragment {
@@ -34,6 +35,7 @@ public class RunFragment extends Fragment {
 
   /** Id of the parent project. */
   private long mParentProjectId;
+  private PositionDbAdapter mPositionDbAdapter;
   private ScriptDbAdapter mScriptDbAdapter;
   private CommandDbAdapter mCommandDbAdapter;
 
@@ -52,6 +54,8 @@ public class RunFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    mPositionDbAdapter = new PositionDbAdapter();
+    mPositionDbAdapter.open();
     mScriptDbAdapter = new ScriptDbAdapter();
     mScriptDbAdapter.open();
     mCommandDbAdapter = new CommandDbAdapter();
@@ -138,6 +142,7 @@ public class RunFragment extends Fragment {
     mCommandHandler.postDelayed(new Runnable(){
       @Override
       public void run() {
+        ((AccessoryActivity) getActivity()).sendCommand(customCommandString);
         ConsoleMessage command = new ConsoleMessage(customCommandString, true);
         mConsoleMessages.add(command);
         mConsoleMessageListAdapter.notifyDataSetChanged();
@@ -150,6 +155,7 @@ public class RunFragment extends Fragment {
     mCommandHandler.postDelayed(new Runnable(){
       @Override
       public void run() {
+        ((AccessoryActivity) getActivity()).sendCommand("GRIPPER " + gripperDistanceMm);
         ConsoleMessage command = new ConsoleMessage("GRIPPER " + gripperDistanceMm, true);
         mConsoleMessages.add(command);
         mConsoleMessageListAdapter.notifyDataSetChanged();
@@ -161,10 +167,22 @@ public class RunFragment extends Fragment {
     mCommandHandler.postDelayed(new Runnable(){
       @Override
       public void run() {
-        ConsoleMessage command = new ConsoleMessage("POSITION " + " TBD " + positionId, true);
+        Cursor currentPosition = mPositionDbAdapter.fetchPosition(positionId);
+        int joint1ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_1);
+        int joint2ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_2);
+        int joint3ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_3);
+        int joint4ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_4);
+        int joint5ColumnIndex = currentPosition.getColumnIndexOrThrow(PositionDbAdapter.KEY_JOINT_5);
+        String commandString = "POSITION " +
+            currentPosition.getInt(joint1ColumnIndex) + " " +
+            currentPosition.getInt(joint2ColumnIndex) + " " +
+            currentPosition.getInt(joint3ColumnIndex) + " " +
+            currentPosition.getInt(joint4ColumnIndex) + " " +
+            currentPosition.getInt(joint5ColumnIndex);
+        ((AccessoryActivity) getActivity()).sendCommand(commandString);
+        ConsoleMessage command = new ConsoleMessage(commandString, true);
         mConsoleMessages.add(command);
         mConsoleMessageListAdapter.notifyDataSetChanged();
-        
       }
     }, delayPostingForMs);
   }
