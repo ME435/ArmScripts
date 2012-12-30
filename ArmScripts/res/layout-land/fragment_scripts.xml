@@ -14,19 +14,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-
             <ToggleButton
                 android:id="@+id/toggle_button_edit_commands"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="42dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="2dp"
-                android:minHeight="36dip"
-                android:padding="2dp"
                 android:textOff="Edit"
                 android:textOn="Done"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <Spinner
                 android:id="@+id/select_script_spinner"

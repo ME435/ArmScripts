@@ -1,4 +1,5 @@
 <resources>
+
     <string name="tab_title_run">Run</string>
     <string name="tab_title_scripts">Scripts</string>
     <string name="tab_title_positions">Positions</string>
@@ -12,7 +13,7 @@
         Assuming you are in the course connect your robot arm and get started.</string>
     <string name="get_started">Get Started</string>
     <string name="title_activity_project_list">Robotics Engineering</string>
-	<string name="add_project">Add Project</string>
+    <string name="add_project">Add Project</string>
     <string name="delete_project">Delete Project</string>
     <string name="edit_project_name">Edit Project Name</string>
     <string name="create_project">Create Project</string>
@@ -28,4 +29,7 @@
     <string name="degrees_format">%1$dº</string>
     <string name="joint_label_format">%1$d: %2$dº</string>
     <string name="unknown_joint_value">--</string>
+    <string name="someString"><font color="#030303">One Colored Text</font><font color="#FF0000"> Different Colored Text</font></string>
+    <string name="messages_sent_and_received">Messages <span style="color: #B3B3E3">sent</span> and <font color='#40BA3C'>received</font></string>
+
 </resources>

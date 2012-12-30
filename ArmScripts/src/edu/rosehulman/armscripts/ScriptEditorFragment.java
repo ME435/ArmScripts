@@ -45,7 +45,7 @@ import edu.rosehulman.armscripts.db.ScriptDbAdapter;
 public class ScriptEditorFragment extends Fragment {
 
   private static final String TAG = ScriptEditorFragment.class.getSimpleName();
-  private static final String DEFAULT_SCRIPT_NAME = "untitled script";
+  private static final String DEFAULT_SCRIPT_NAME = "UNTITLED_SCRIPT";
 
   /** Id of the parent project. */
   private long mParentProjectId;
@@ -225,9 +225,8 @@ public class ScriptEditorFragment extends Fragment {
         break;
       case CUSTOM:
         dialog.setTitle("Enter a new custom command");
-        // commandValueEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
-        int customColumn = commandCursor
-            .getColumnIndexOrThrow(CommandDbAdapter.KEY_CUSTOM_COMMAND);
+        commandValueEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+        int customColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_CUSTOM_COMMAND);
         String customText = commandCursor.getString(customColumn);
         commandValueEditText.setText(customText);
         break;
@@ -240,32 +239,7 @@ public class ScriptEditorFragment extends Fragment {
         @Override
         public void onClick(View v) {
           String commandStrValue = commandValueEditText.getText().toString();
-          switch (mSelectedCommandType) {
-          case DELAY:
-            try {
-              int newDelayValue = Integer.valueOf(commandStrValue);
-              mCommandDbAdapter.updateDelayCommandTime(mSelectedCommandId, newDelayValue);
-            } catch (Exception e) {
-              Toast.makeText(getActivity(), "Invalid delay value", Toast.LENGTH_SHORT).show();
-            }
-            break;
-          case GRIPPER:
-            try {
-              int newGripperValue = Integer.valueOf(commandStrValue);
-              mCommandDbAdapter.updateGripperCommandDistance(mSelectedCommandId, newGripperValue);
-            } catch (Exception e) {
-              Toast.makeText(getActivity(), "Invalid gripper value", Toast.LENGTH_SHORT).show();
-            }
-            break;
-          case CUSTOM:
-            mCommandDbAdapter.updateCustomCommand(mSelectedCommandId, commandStrValue);
-            break;
-          default:
-            Log.w(TAG, "Attempt to edit an uneditable command type.");
-            break;
-          }
-          refreshCommandList();
-
+          updateCommand(commandStrValue);
           dialog.dismiss();
         }
       });
@@ -277,22 +251,53 @@ public class ScriptEditorFragment extends Fragment {
         }
       });
 
-      // Consider: Project renaming is done action is different.
-      // commandValueEditText.setOnEditorActionListener(new
-      // OnEditorActionListener() {
-      // @Override
-      // public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
-      // {
-      // if (EditorInfo.IME_ACTION_DONE == actionId) {
-      // dialog.dismiss();
-      // }
-      // return false;
-      // }
-      // });
+      // Update if the done button is pressed.
+      commandValueEditText.setOnEditorActionListener(new OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+          if (EditorInfo.IME_ACTION_DONE == actionId) {
+            String commandStrValue = commandValueEditText.getText().toString();
+            updateCommand(commandStrValue);
+            dialog.dismiss();
+          }
+          return false;
+        }
+      });
 
       return dialog;
     };
 
+    /**
+     * Update the command
+     * @param commandStrValue String value in the edittext field.
+     */
+    private void updateCommand(String commandStrValue) {
+      switch (mSelectedCommandType) {
+      case DELAY:
+        try {
+          int newDelayValue = Integer.valueOf(commandStrValue);
+          mCommandDbAdapter.updateDelayCommandTime(mSelectedCommandId, newDelayValue);
+        } catch (Exception e) {
+          Toast.makeText(getActivity(), "Invalid delay value", Toast.LENGTH_SHORT).show();
+        }
+        break;
+      case GRIPPER:
+        try {
+          int newGripperValue = Integer.valueOf(commandStrValue);
+          mCommandDbAdapter.updateGripperCommandDistance(mSelectedCommandId, newGripperValue);
+        } catch (Exception e) {
+          Toast.makeText(getActivity(), "Invalid gripper value", Toast.LENGTH_SHORT).show();
+        }
+        break;
+      case CUSTOM:
+        mCommandDbAdapter.updateCustomCommand(mSelectedCommandId, commandStrValue);
+        break;
+      default:
+        Log.w(TAG, "Attempt to edit an uneditable command type.");
+        break;
+      }
+      refreshCommandList();
+    }
   };
 
   private DragSortListView.DropListener mDslvDropListener = new DragSortListView.DropListener() {
@@ -395,8 +400,8 @@ public class ScriptEditorFragment extends Fragment {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long commandId) {
         mSelectedCommandId = commandId;
-        
-        // I may change my mind on this.  
+
+        // I may change my mind on this.
         // For delay command only ALWAYS launch the editor on a single tap.
         Cursor commandCursor = mCommandDbAdapter.fetchCommand(mSelectedCommandId);
         int typeColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_TYPE);

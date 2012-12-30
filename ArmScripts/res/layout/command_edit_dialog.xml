@@ -10,7 +10,7 @@
 		android:layout_height="wrap_content"
 		android:hint="Enter a new value"
 		android:layout_margin="10dp"
-		android:inputType="text"
+		android:inputType="number"
 		android:imeOptions="actionDone"
 		android:singleLine="true"/>
 	<LinearLayout
