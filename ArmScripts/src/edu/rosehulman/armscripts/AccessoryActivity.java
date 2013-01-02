@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+import android.widget.Toast;
 
 public class AccessoryActivity extends Activity {
 
@@ -30,6 +31,45 @@ public class AccessoryActivity extends Activity {
   private FileInputStream mInputStream;
   private FileOutputStream mOutputStream;
 
+  
+
+  Runnable mRxRunnable = new Runnable() {
+
+    public void run() {
+      int ret = 0;
+      byte[] buffer = new byte[255];
+
+      // Loop that runs forever (or until a -1 error state).
+      while (ret >= 0) {
+        try {
+          ret = mInputStream.read(buffer);
+        } catch (IOException e) {
+          break;
+        }
+        
+        if (ret > 0) {
+          // Convert the bytes into a string.
+          String received = new String(buffer, 0, ret);
+          final String receivedCommand = received.trim();
+          runOnUiThread(new Runnable() {
+            public void run() {
+              onCommandReceived(receivedCommand);
+            }
+          });
+        }
+      }
+    }
+  };
+  
+  /**
+   * Override this method with your activity if you'd like to receive messages.
+   * @param receivedCommand
+   */
+  protected void onCommandReceived(final String receivedCommand) {
+    //Toast.makeText(this, "Received command = " + receivedCommand, Toast.LENGTH_SHORT).show();
+    Log.d(TAG, "Received command = " + receivedCommand);
+  }
+  
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -130,6 +170,8 @@ public class AccessoryActivity extends Activity {
       FileDescriptor fd = mFileDescriptor.getFileDescriptor();
       mInputStream = new FileInputStream(fd);
       mOutputStream = new FileOutputStream(fd);
+      Thread thread = new Thread(null, mRxRunnable, TAG);
+      thread.start();
       Log.d(TAG, "accessory opened");
     } else {
       Log.d(TAG, "accessory open fail");

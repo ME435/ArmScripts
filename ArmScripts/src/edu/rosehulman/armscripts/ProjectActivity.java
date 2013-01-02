@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class ProjectActivity extends AccessoryActivity implements ActionBar.TabListener {
@@ -20,6 +22,8 @@ public class ProjectActivity extends AccessoryActivity implements ActionBar.TabL
   private static final int POSITIONS_TAB_INDEX = 0;
   private static final int SCRIPT_EDITOR_INDEX = 1;
   private static final int RUN_INDEX = 2;
+  
+  private RunFragment mRunFragment = null;
   
   private long mCurrentProjectId;
   public long getCurrentProjectId() {
@@ -85,7 +89,8 @@ public class ProjectActivity extends AccessoryActivity implements ActionBar.TabL
   @Override
   public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     // When the given tab is selected, show the tab contents in the container
-    Fragment fragment = new DummySectionFragment();
+    Fragment fragment = null;
+    mRunFragment = null;
     switch (tab.getPosition()) {
     case POSITIONS_TAB_INDEX:
       fragment = new PositionsFragment();
@@ -95,6 +100,7 @@ public class ProjectActivity extends AccessoryActivity implements ActionBar.TabL
       break;
     case RUN_INDEX:
       fragment = new RunFragment();
+      mRunFragment = (RunFragment) fragment;
       break;
 
     }
@@ -104,23 +110,13 @@ public class ProjectActivity extends AccessoryActivity implements ActionBar.TabL
   @Override
   public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
   }
-
-  /**
-   * A dummy fragment representing a section of the app, but that simply
-   * displays dummy text.
-   */
-  public static class DummySectionFragment extends Fragment {
-    public DummySectionFragment() {
+  
+  @Override
+  protected void onCommandReceived(String receivedCommand) {
+    super.onCommandReceived(receivedCommand);
+    if (mRunFragment != null) {
+      mRunFragment.onCommandReceived(receivedCommand);
     }
-
-    public static final String ARG_SECTION_NUMBER = "section_number";
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      TextView textView = new TextView(getActivity());
-      textView.setGravity(Gravity.CENTER);
-      textView.setText("Hello");
-      return textView;
-    }
+    
   }
 }

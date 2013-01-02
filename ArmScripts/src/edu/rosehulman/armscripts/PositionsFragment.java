@@ -344,6 +344,15 @@ public class PositionsFragment extends Fragment {
         mCurrentJointValues[4] = currentPosition.getInt(joint4ColumnIndex);
         mCurrentJointValues[5] = currentPosition.getInt(joint5ColumnIndex);
         
+        // Actually move the robot arm.
+        String commandString = "POSITION " +
+            mCurrentJointValues[1] + " " +
+            mCurrentJointValues[2] + " " +
+            mCurrentJointValues[3] + " " +
+            mCurrentJointValues[4] + " " +
+            mCurrentJointValues[5];
+        ((AccessoryActivity) getActivity()).sendCommand(commandString);
+        
         mActiveJoint = 1;
         updateJointButtonText();
         updatePendantActiveJointChanged();
@@ -412,8 +421,13 @@ public class PositionsFragment extends Fragment {
     int jointValue = mCurrentJointValues[mActiveJoint];
     mCurrentJointValueTextView.setText(getString(R.string.degrees_format, jointValue));
     if (mActiveJoint > 0) {
+      // Actually make the robot arm move
+      ((AccessoryActivity) getActivity()).sendCommand("JOINT " + mActiveJoint + " ANGLE " + jointValue);
       mJointButton[mActiveJoint].setText(getString(R.string.joint_label_format, mActiveJoint,
           jointValue));
+    } else {
+      // Actually make the robot arm move
+      ((AccessoryActivity) getActivity()).sendCommand("GRIPPER " + jointValue);
     }
   }
 

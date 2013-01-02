@@ -213,7 +213,8 @@ public class ScriptEditorFragment extends Fragment {
         // commandValueEditText.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
         int delayColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_DELAY_MS);
         int delayValue = commandCursor.getInt(delayColumn);
-        commandValueEditText.setText("" + delayValue);
+        commandValueEditText.setHint("" + delayValue);
+        commandValueEditText.setText("");
         break;
       case GRIPPER:
         dialog.setTitle("New gripper distance in millimeters (0 to 100)");
@@ -221,7 +222,8 @@ public class ScriptEditorFragment extends Fragment {
         int gripperColumn = commandCursor
             .getColumnIndexOrThrow(CommandDbAdapter.KEY_GRIPPER_DISTANCE);
         int gripperValue = commandCursor.getInt(gripperColumn);
-        commandValueEditText.setText("" + gripperValue);
+        commandValueEditText.setHint("" + gripperValue);
+        commandValueEditText.setText("");
         break;
       case CUSTOM:
         dialog.setTitle("Enter a new custom command");
