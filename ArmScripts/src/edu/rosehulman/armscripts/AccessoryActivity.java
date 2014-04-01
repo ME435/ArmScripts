@@ -188,6 +188,8 @@ public class AccessoryActivity extends Activity {
     } finally {
       mFileDescriptor = null;
       mAccessory = null;
+      mInputStream = null; 
+      mOutputStream = null;
     }
   }
 

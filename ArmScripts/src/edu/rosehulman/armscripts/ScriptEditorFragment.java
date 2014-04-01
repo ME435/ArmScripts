@@ -317,7 +317,6 @@ public class ScriptEditorFragment extends Fragment {
 
     @Override
     public void remove(int which) {
-      // mCommandDbAdapter.deleteCommand(which);
       long commandIdToRemove = mCommandListView.getItemIdAtPosition(which);
       Log.d(TAG, "Remove which = " + which + "   id = " + commandIdToRemove);
       mCommandDbAdapter.deleteCommand(commandIdToRemove);

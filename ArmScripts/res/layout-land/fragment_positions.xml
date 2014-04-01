@@ -116,8 +116,8 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/textview_current_angle"
                 android:layout_marginBottom="70dp"
-                android:max="540"
-                android:progress="270" />
+                android:max="180"
+                android:progress="90" />
 
             <SeekBar
                 android:id="@+id/relative_joint_angle"
@@ -130,6 +130,7 @@
                 android:progress="5" />
 
             <TextView
+                android:id="@+id/textview_absolute_angle_min"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/absolute_joint_angle"
@@ -139,6 +140,7 @@
                 android:textSize="@dimen/angle_seek_bar_labels" />
 
             <TextView
+                android:id="@+id/textview_absolute_angle_max"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/absolute_joint_angle"
@@ -148,6 +150,7 @@
                 android:textSize="@dimen/angle_seek_bar_labels" />
 
             <TextView
+                android:id="@+id/textview_relative_angle_min"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/relative_joint_angle"
@@ -157,6 +160,7 @@
                 android:textSize="@dimen/angle_seek_bar_labels" />
 
             <TextView
+                android:id="@+id/textview_relative_angle_max"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignRight="@id/relative_joint_angle"

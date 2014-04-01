@@ -13,10 +13,10 @@
 
     <application
         android:icon="@drawable/roselogo"
-        android:label="@string/me435" >
+        android:label="@string/arm_scripts" >
         <activity
             android:name=".ProjectListActivity"
-            android:label="@string/me435" >
+            android:label="@string/arm_scripts" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,7 +32,7 @@
         </activity>
         <activity
             android:name=".ProjectActivity"
-            android:label="@string/me435" >
+            android:label="@string/arm_scripts" >
         </activity>
     </application>
 

@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 import edu.rosehulman.armscripts.db.PositionDbAdapter;
+import edu.rosehulman.armscripts.db.ScriptDbAdapter;
 
 /**
  * The goal of this fragment is to allow a user to create positions within a
@@ -43,12 +44,14 @@ public class PositionsFragment extends Fragment {
 
   public static final String TAG = "PositionsFragment";
   private static final int GRIPPER_JOINT_NUMBER = 0;
-  private static final int ABSOLUTE_SEEK_BAR_MAX = 270;
+  private static final int ABSOLUTE_SEEK_BAR_MAX = 90;
   private static final int RELATIVE_SEEK_BAR_MAX = 5;
 
   // References to simple UI widgets
   private Button[] mJointButton = new Button[6];
   private SeekBar mAbsoluteCoarseSeekBar, mRelativeFineSeekBar;
+  private TextView mAbsoluteAngleMaxTextView, mAbsoluteAngleMinTextView, mRelativeAngleMaxTextView, mRelativeAngleMinTextView;
+  
   private TextView mCurrentJointValueTextView;
   private TextView[] mExistingPositionTextView = new TextView[6];
 
@@ -160,14 +163,14 @@ public class PositionsFragment extends Fragment {
     mParentProjectId = ((ProjectActivity) getActivity()).getCurrentProjectId();
     
     // Default joint values for the current robot position.
-    // TODO: Make this smarter when you start the fragment.
-    // You should request this information from Arduino.
-    mCurrentJointValues[0] = 30;
+    // Consider: Could make this smarter when you start the fragment.
+    // Could request this information from Arduino.  Assume HOME for now.
     mCurrentJointValues[1] = 0;
     mCurrentJointValues[2] = 90;
     mCurrentJointValues[3] = 0;
     mCurrentJointValues[4] = -90;
-    mCurrentJointValues[5] = 0;
+    mCurrentJointValues[5] = 90;
+    mCurrentJointValues[GRIPPER_JOINT_NUMBER] = 50;
   }
 
   /**
@@ -189,6 +192,10 @@ public class PositionsFragment extends Fragment {
     mCurrentJointValueTextView = (TextView) view.findViewById(R.id.textview_current_angle);
     mAbsoluteCoarseSeekBar = (SeekBar) view.findViewById(R.id.absolute_joint_angle);
     mRelativeFineSeekBar = (SeekBar) view.findViewById(R.id.relative_joint_angle);
+    mAbsoluteAngleMaxTextView = (TextView) view.findViewById(R.id.textview_absolute_angle_max);
+    mAbsoluteAngleMinTextView = (TextView) view.findViewById(R.id.textview_absolute_angle_min);
+    mRelativeAngleMaxTextView = (TextView) view.findViewById(R.id.textview_relative_angle_max);
+    mRelativeAngleMinTextView = (TextView) view.findViewById(R.id.textview_relative_angle_min);
     mExistingPositionsSpinner = (Spinner) view.findViewById(R.id.position_selector);
     // Note: There is no mExistingPositionTextView[0] TextView.
     mExistingPositionTextView[1] = (TextView) view.findViewById(R.id.joint_1_value);
@@ -197,6 +204,24 @@ public class PositionsFragment extends Fragment {
     mExistingPositionTextView[4] = (TextView) view.findViewById(R.id.joint_4_value);
     mExistingPositionTextView[5] = (TextView) view.findViewById(R.id.joint_5_value);
 
+    
+    // Get the active script. Make one if none exist.
+//    Cursor scriptsCursor = mScriptDbAdapter.fetchAllProjectScripts(mParentProjectId);
+//    if (scriptsCursor != null && scriptsCursor.moveToFirst()) {
+//      int scriptIdColumn = scriptsCursor.getColumnIndexOrThrow(ScriptDbAdapter.KEY_ID);
+//      mActiveScriptId = scriptsCursor.getLong(scriptIdColumn);
+//    } else {
+//      // No scripts in this project. Make one.
+//      mActiveScriptId = mScriptDbAdapter.createScript(mParentProjectId, DEFAULT_SCRIPT_NAME);
+//    }
+    
+    Cursor positionsCursor = mPositionDbAdapter.fetchAllProjectPositions(mParentProjectId);
+    if (positionsCursor == null || !positionsCursor.moveToFirst()) {
+      // There are no positions.  Add HOME at least.
+      mPositionDbAdapter.createPosition(mParentProjectId, "HOME", 0, 90, 0, -90, 90);
+      mPositionDbAdapter.createPosition(mParentProjectId, "ZERO", 0, 0, 0, 0, 0);
+    }
+    
 
     // Create button handler.  Launch the dialog (in create mode) when clicked.
     Button createPositionButton = (Button) view.findViewById(R.id.create_position_button);
@@ -264,7 +289,28 @@ public class PositionsFragment extends Fragment {
 
       @Override
       public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mCurrentJointValues[mActiveJoint] = progress - ABSOLUTE_SEEK_BAR_MAX;
+        
+        // This needs to be an independent equation for each joint.
+        switch (mActiveJoint) {
+        case 1:
+          mCurrentJointValues[mActiveJoint] = progress - 90;
+          break;
+        case 2:
+          mCurrentJointValues[mActiveJoint] = progress;
+          break;
+        case 3:
+          mCurrentJointValues[mActiveJoint] = progress - 90;
+          break;
+        case 4:
+          mCurrentJointValues[mActiveJoint] = progress - 180;
+          break;
+        case 5:
+          mCurrentJointValues[mActiveJoint] = progress;
+          break;
+        case GRIPPER_JOINT_NUMBER:
+          mCurrentJointValues[mActiveJoint] = progress / 2 - 25;
+          break;
+        }        
         updateCurrentJointTextSeekBarChanged();
       }
     });
@@ -275,8 +321,7 @@ public class PositionsFragment extends Fragment {
       public void onStopTrackingTouch(SeekBar seekBar) {
         mRelativeSeekBarOffset = 0;
         seekBar.setProgress(RELATIVE_SEEK_BAR_MAX);
-        mAbsoluteCoarseSeekBar.setProgress(mCurrentJointValues[mActiveJoint]
-            + ABSOLUTE_SEEK_BAR_MAX);
+        updateAbsoluteSeekBar(mCurrentJointValues[mActiveJoint]);
       }
 
       @Override
@@ -419,7 +464,11 @@ public class PositionsFragment extends Fragment {
    */
   private void updateCurrentJointTextSeekBarChanged() {
     int jointValue = mCurrentJointValues[mActiveJoint];
-    mCurrentJointValueTextView.setText(getString(R.string.degrees_format, jointValue));
+    if (mActiveJoint == GRIPPER_JOINT_NUMBER) {
+      mCurrentJointValueTextView.setText(getString(R.string.mm_format, jointValue));      
+    } else {
+      mCurrentJointValueTextView.setText(getString(R.string.degrees_format, jointValue));
+    }
     if (mActiveJoint > 0) {
       // Actually make the robot arm move
       ((AccessoryActivity) getActivity()).sendCommand("JOINT " + mActiveJoint + " ANGLE " + jointValue);
@@ -436,9 +485,46 @@ public class PositionsFragment extends Fragment {
    * similar to the function above, this one is used when we switch joints (robot didn't move).
    */
   private void updatePendantActiveJointChanged() {
+    // TODO: There is some duplicate code here and above that could be joined I'm sure.
     int jointValue = mCurrentJointValues[mActiveJoint];
-    mCurrentJointValueTextView.setText(getString(R.string.degrees_format, jointValue));
-    mAbsoluteCoarseSeekBar.setProgress(jointValue + ABSOLUTE_SEEK_BAR_MAX);
+    if (mActiveJoint == GRIPPER_JOINT_NUMBER) {
+      mCurrentJointValueTextView.setText(getString(R.string.mm_format, jointValue));      
+    } else {
+      mCurrentJointValueTextView.setText(getString(R.string.degrees_format, jointValue));
+    }
+    updateAbsoluteSeekBar(jointValue);
+    
+    mRelativeAngleMaxTextView.setText(getString(R.string.relative_angle_max));
+    mRelativeAngleMinTextView.setText(getString(R.string.relative_angle_min));
+    switch (mActiveJoint) {
+    case 1:
+      mAbsoluteAngleMinTextView.setText(getString(R.string.degrees_format, -90));
+      mAbsoluteAngleMaxTextView.setText(getString(R.string.degrees_format, 90));
+      break;
+    case 2:
+      mAbsoluteAngleMinTextView.setText(getString(R.string.degrees_format, 0));
+      mAbsoluteAngleMaxTextView.setText(getString(R.string.degrees_format, 180));
+      break;
+    case 3:
+      mAbsoluteAngleMinTextView.setText(getString(R.string.degrees_format, -90));
+      mAbsoluteAngleMaxTextView.setText(getString(R.string.degrees_format, 90));
+      break;
+    case 4:
+      mAbsoluteAngleMinTextView.setText(getString(R.string.degrees_format, -180));
+      mAbsoluteAngleMaxTextView.setText(getString(R.string.degrees_format, 0));
+      break;
+    case 5:
+      mAbsoluteAngleMinTextView.setText(getString(R.string.degrees_format, 0));
+      mAbsoluteAngleMaxTextView.setText(getString(R.string.degrees_format, 180));
+      break;
+    case GRIPPER_JOINT_NUMBER:
+      mAbsoluteAngleMinTextView.setText("Closed");
+      mAbsoluteAngleMaxTextView.setText("Open");
+      mRelativeAngleMaxTextView.setText("+5mm");
+      mRelativeAngleMinTextView.setText("-5mm");
+      break;
+    }
+    
     mRelativeFineSeekBar.setProgress(RELATIVE_SEEK_BAR_MAX);
     mJointButton[1].setBackgroundResource(R.drawable.black_button);
     mJointButton[2].setBackgroundResource(R.drawable.black_button);
@@ -457,6 +543,31 @@ public class PositionsFragment extends Fragment {
     mJointButton[GRIPPER_JOINT_NUMBER].setPadding(50, 0, 0, 0);  // Joint "0"
   }
 
+
+  private void updateAbsoluteSeekBar(int jointValue) {
+
+    // This needs to be an independent equation for each joint.
+    switch (mActiveJoint) {
+    case 1:
+      mAbsoluteCoarseSeekBar.setProgress(jointValue + 90);
+      break;
+    case 2:
+      mAbsoluteCoarseSeekBar.setProgress(jointValue);
+      break;
+    case 3:
+      mAbsoluteCoarseSeekBar.setProgress(jointValue + 90);
+      break;
+    case 4:
+      mAbsoluteCoarseSeekBar.setProgress(jointValue + 180);
+      break;
+    case 5:
+      mAbsoluteCoarseSeekBar.setProgress(jointValue);
+      break;
+    case GRIPPER_JOINT_NUMBER:
+      mAbsoluteCoarseSeekBar.setProgress(jointValue * 2 + 50);
+      break;
+    }
+  }
 
   // Update the text on all the joint buttons.
   private void updateJointButtonText() {
