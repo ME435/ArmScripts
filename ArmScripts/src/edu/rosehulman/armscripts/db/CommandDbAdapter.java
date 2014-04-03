@@ -49,7 +49,7 @@ public class CommandDbAdapter {
    * Possible types of commands used.
    */
   public enum Type {
-    POSITION, DELAY, GRIPPER, CUSTOM, SCRIPT;
+    POSITION, DELAY, GRIPPER, ATTACH, CUSTOM, SCRIPT;
 
     public String toString() {
       String s = super.toString();
@@ -117,14 +117,20 @@ public class CommandDbAdapter {
       break;
     case GRIPPER:
       if (longValue <= 0) {
-        initialValues.put(KEY_GRIPPER_DISTANCE, longValue);
-        initialValues.put(KEY_DISPLAY_TEXT, "Gripper: Close");
+        longValue = 0;
       } else if (longValue >= LARGEST_OPEN_GRIPPER_VALUE) {
-        initialValues.put(KEY_GRIPPER_DISTANCE, LARGEST_OPEN_GRIPPER_VALUE);
-        initialValues.put(KEY_DISPLAY_TEXT, "Gripper: Open");
+        longValue = LARGEST_OPEN_GRIPPER_VALUE;
+      }
+      initialValues.put(KEY_GRIPPER_DISTANCE, longValue);
+      initialValues.put(KEY_DISPLAY_TEXT, "Gripper: " + longValue + "mm");      
+      break;
+    case ATTACH:
+      if (longValue == 0) {
+        initialValues.put(KEY_CUSTOM_COMMAND, "ATTACH 111110");  // TODO: Make KEY_ATTACH_COMMAND so the editor isn't just a string editor.
+        initialValues.put(KEY_DISPLAY_TEXT, "Attach: 111110");        
       } else {
-        initialValues.put(KEY_GRIPPER_DISTANCE, longValue);
-        initialValues.put(KEY_DISPLAY_TEXT, "Gripper: " + longValue + "mm");
+        initialValues.put(KEY_CUSTOM_COMMAND, "ATTACH 111111");
+        initialValues.put(KEY_DISPLAY_TEXT, "Attach: 111111");
       }
       break;
     case CUSTOM:
@@ -349,6 +355,23 @@ public class CommandDbAdapter {
     ContentValues contentValues = new ContentValues();
     contentValues.put(KEY_CUSTOM_COMMAND, newCustomCommand);
     contentValues.put(KEY_DISPLAY_TEXT, "Custom: " + newCustomCommand);
+    return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + commandId,
+        null) > 0;
+  }
+
+  /**
+   * Update the attach command message.
+   * 
+   * @param commandId
+   *            id of command to update
+   * @param newCustomCommand
+   *            new message to send
+   * @return true if the project was successfully updated, false otherwise
+   */
+  public boolean updateAttachCommand(long commandId, String newCustomCommand) {
+    ContentValues contentValues = new ContentValues();
+    contentValues.put(KEY_CUSTOM_COMMAND, newCustomCommand);  // TODO: Make an ATTACH key.
+    contentValues.put(KEY_DISPLAY_TEXT, "Attach: " + newCustomCommand.substring(8));
     return mDb.update(TABLE_NAME, contentValues, KEY_ID + "=" + commandId,
         null) > 0;
   }

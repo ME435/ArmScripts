@@ -232,6 +232,13 @@ public class ScriptEditorFragment extends Fragment {
         String customText = commandCursor.getString(customColumn);
         commandValueEditText.setText(customText);
         break;
+      case ATTACH:
+        dialog.setTitle("Enter a new attach command");
+        commandValueEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+        int attachColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_CUSTOM_COMMAND);  // TODO: Make and Attach column
+        String attachText = commandCursor.getString(attachColumn);
+        commandValueEditText.setText(attachText);
+        break;
       default:
         Log.w(TAG, "Attempt to edit an uneditable command type.");
         break;
@@ -292,6 +299,9 @@ public class ScriptEditorFragment extends Fragment {
         }
         break;
       case CUSTOM:
+        mCommandDbAdapter.updateCustomCommand(mSelectedCommandId, commandStrValue);
+        break;
+      case ATTACH:
         mCommandDbAdapter.updateCustomCommand(mSelectedCommandId, commandStrValue);
         break;
       default:
@@ -511,23 +521,23 @@ public class ScriptEditorFragment extends Fragment {
       }
     });
 
-    // Gripper Open
-    Button gripperOpenButton = (Button) view.findViewById(R.id.button_gripper_open);
-    gripperOpenButton.setOnClickListener(new View.OnClickListener() {
+    // Gripper Attach
+    Button gripperAttachButton = (Button) view.findViewById(R.id.button_gripper_attach);
+    gripperAttachButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.GRIPPER,
-            CommandDbAdapter.LARGEST_OPEN_GRIPPER_VALUE, "");
+        mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.ATTACH,
+            1, "");
         refreshCommandList();
       }
     });
 
-    // Gripper Close
-    Button gripperCloseButton = (Button) view.findViewById(R.id.button_gripper_close);
-    gripperCloseButton.setOnClickListener(new View.OnClickListener() {
+    // Gripper Detach
+    Button gripperDetachButton = (Button) view.findViewById(R.id.button_gripper_detach);
+    gripperDetachButton.setOnClickListener(new View.OnClickListener() {
       @Override
       public void onClick(View v) {
-        mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.GRIPPER, 0, "");
+        mCommandDbAdapter.createCommand(mActiveScriptId, CommandDbAdapter.Type.ATTACH, 0, "");
         refreshCommandList();
       }
     });
@@ -683,11 +693,14 @@ public class ScriptEditorFragment extends Fragment {
     } else if (type.equals(CommandDbAdapter.Type.CUSTOM.toString())) {
       mSelectedCommandType = CommandDbAdapter.Type.CUSTOM;
       mEditCommandDF.show(getFragmentManager(), "update custom command");
+    } else if (type.equals(CommandDbAdapter.Type.ATTACH.toString())) {
+      mSelectedCommandType = CommandDbAdapter.Type.ATTACH;
+      mEditCommandDF.show(getFragmentManager(), "update attach command");
     } else if (type.equals(CommandDbAdapter.Type.SCRIPT.toString())) {
       Toast.makeText(getActivity(), "Delete this script then add a new script", Toast.LENGTH_LONG)
           .show();
     } else {
-      Log.w(TAG, "Attempt to edit and unknown type.");
+      Log.w(TAG, "Attempt to edit an unknown type.");
     }
   }
 

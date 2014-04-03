@@ -154,7 +154,7 @@
                 android:layout_marginTop="5dp" />
 
             <Button
-                android:id="@+id/button_gripper_open"
+                android:id="@+id/button_gripper_attach"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -163,10 +163,10 @@
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@id/button_divider"
                 android:background="@drawable/green_button"
-                android:text="Open" />
+                android:text="Attach" />
 
             <Button
-                android:id="@+id/button_gripper_close"
+                android:id="@+id/button_gripper_detach"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -175,12 +175,12 @@
                 android:layout_marginRight="20dp"
                 android:layout_toRightOf="@id/button_divider"
                 android:background="@drawable/red_button"
-                android:text="Close" />
+                android:text="Detach" />
 
             <View
                 android:id="@+id/line_below_gripper"
                 style="@style/GrayHorizontalLine"
-                android:layout_below="@id/button_gripper_open"
+                android:layout_below="@id/button_gripper_attach"
                 android:layout_marginTop="20dp" />
 
             <TextView

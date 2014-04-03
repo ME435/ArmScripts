@@ -137,6 +137,8 @@ public class RunFragment extends Fragment {
           executeGripperCommand(allCommandsCursor.getInt(gripperDistanceColumn), delayUntilNextCommandExecutesInMs);
         } else if (type.equals(CommandDbAdapter.Type.CUSTOM.toString())) {
           executeCustomCommand(allCommandsCursor.getString(customCommandColumn), delayUntilNextCommandExecutesInMs);
+        } else if (type.equals(CommandDbAdapter.Type.ATTACH.toString())) {
+          executeCustomCommand(allCommandsCursor.getString(customCommandColumn), delayUntilNextCommandExecutesInMs);  // TODO: Use an ATTACH COLUMN
         } else if (type.equals(CommandDbAdapter.Type.SCRIPT.toString())) {
           long nextScriptId = allCommandsCursor.getLong(anotherScriptIdColumn);
           if (!mScriptsAlreadyCalled.contains(nextScriptId)) {
