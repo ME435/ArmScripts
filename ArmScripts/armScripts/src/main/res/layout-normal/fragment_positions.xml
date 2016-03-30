@@ -2,14 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
-
-
+    android:orientation="vertical" >
 
     <RelativeLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2" >
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
 
         <TextView
             android:id="@+id/textview_pendant_title"
@@ -41,18 +39,11 @@
             android:layout_below="@id/textview_pendant_title"
             android:background="@color/light_blue" />
 
-        <View
-            android:id="@+id/bottom_line"
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="2dip"
-            android:background="@color/light_blue" />
         <LinearLayout
             android:id="@+id/linearlayout_joint_buttons"
             android:layout_width="150dp"
             android:layout_height="match_parent"
             android:layout_below="@id/current_position_underline"
-            android:layout_above="@id/bottom_line"
             android:orientation="vertical" >
 
             <Button
@@ -169,15 +160,18 @@
                 android:textColor="@color/angle_seek_bar_labels"
                 android:textSize="@dimen/angle_seek_bar_labels" />
         </RelativeLayout>
-        
-        
     </RelativeLayout>
-    
+
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:background="@color/light_blue" />
 
         <Spinner
             android:id="@+id/position_selector"
@@ -185,23 +179,54 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="60dp"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="60dp"
             android:background="@drawable/black_button"
             android:textSize="30sp" />
 
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:orientation="vertical" >
+            android:orientation="horizontal" >
 
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <View
+                    android:id="@+id/middle_of_two_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_centerInParent="true" />
+
+                <Button
+                    android:id="@+id/go_to_position_button"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/middle_of_two_buttons"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/green_button"
+                    android:text="Go to position" />
+
+                <Button
+                    android:id="@+id/set_position_button"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/middle_of_two_buttons"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/blue_button"
+                    android:text="Update position" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/existing_joint_values_area"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal" >
+                android:layout_width="0dp"
+                android:paddingLeft="30dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
 
                 <TextView
                     android:id="@+id/joint_1_title"
@@ -280,42 +305,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/joint_5_title"
                     android:layout_toRightOf="@id/joint_5_title"
-                    android:text="90" />
-            </RelativeLayout>
-            
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" >
-
-                <View
-                    android:id="@+id/middle_of_two_buttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_centerInParent="true" />
-
-
-                <Button
-                    android:id="@+id/go_to_position_button"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@id/middle_of_two_buttons"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/green_button"
-                    android:text="Go to position" />
-
-
-                <Button
-                    android:id="@+id/set_position_button"
-                    android:layout_width="200dp"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/middle_of_two_buttons"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/blue_button"
-                    android:text="Update position" />
+                    android:text="@string/unknown_joint_value" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
+
 </LinearLayout>
