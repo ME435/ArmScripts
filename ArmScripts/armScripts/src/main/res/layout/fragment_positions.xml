@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/textview_pendant_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:text="Teach Pendant"
+            android:textColor="@color/light_blue"
+            android:textSize="30sp" />
+
+        <Button
+            android:id="@+id/create_position_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/textview_pendant_title"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/red_button"
+            android:text="Create position" />
+
+        <View
+            android:id="@+id/current_position_underline"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:layout_below="@id/textview_pendant_title"
+            android:background="@color/light_blue" />
+
+        <LinearLayout
+            android:id="@+id/linearlayout_joint_buttons"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:layout_below="@id/current_position_underline"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/current_position_joint_1_button"
+                style="@style/ButtonText.JointButtons"
+                android:text="1: 0" />
+
+            <Button
+                android:id="@+id/current_position_joint_2_button"
+                style="@style/ButtonText.JointButtons"
+                android:text="2: 90" />
+
+            <Button
+                android:id="@+id/current_position_joint_3_button"
+                style="@style/ButtonText.JointButtons"
+                android:text="3: 0" />
+
+            <Button
+                android:id="@+id/current_position_joint_4_button"
+                style="@style/ButtonText.JointButtons"
+                android:text="4: -90" />
+
+            <Button
+                android:id="@+id/current_position_joint_5_button"
+                style="@style/ButtonText.JointButtons"
+                android:text="5: 0" />
+
+            <Button
+                android:id="@+id/current_position_gripper_button"
+                style="@style/ButtonText.JointButtons"
+                android:text="Gripper" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/viewgroup_current_joint_angle_area"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/textview_pendant_title"
+            android:layout_toRightOf="@id/linearlayout_joint_buttons"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp" >
+
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerInParent="true"
+                android:contentDescription="blue circle"
+                android:src="@drawable/blue_circle_2" />
+
+            <TextView
+                android:id="@+id/textview_current_angle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="48 deg"
+                android:textSize="40sp" />
+
+            <SeekBar
+                android:id="@+id/absolute_joint_angle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/textview_current_angle"
+                android:layout_marginBottom="70dp"
+                android:max="180"
+                android:progress="90" />
+
+            <SeekBar
+                android:id="@+id/relative_joint_angle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textview_current_angle"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="70dp"
+                android:max="10"
+                android:progress="5" />
+
+            <TextView
+                android:id="@+id/textview_absolute_angle_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/absolute_joint_angle"
+                android:layout_alignLeft="@id/absolute_joint_angle"
+                android:text="@string/absolute_angle_min"
+                android:textColor="@color/angle_seek_bar_labels"
+                android:textSize="@dimen/angle_seek_bar_labels" />
+
+            <TextView
+                android:id="@+id/textview_absolute_angle_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/absolute_joint_angle"
+                android:layout_alignRight="@id/absolute_joint_angle"
+                android:text="@string/absolute_angle_max"
+                android:textColor="@color/angle_seek_bar_labels"
+                android:textSize="@dimen/angle_seek_bar_labels" />
+
+            <TextView
+                android:id="@+id/textview_relative_angle_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/relative_joint_angle"
+                android:layout_below="@id/relative_joint_angle"
+                android:text="@string/relative_angle_min"
+                android:textColor="@color/angle_seek_bar_labels"
+                android:textSize="@dimen/angle_seek_bar_labels" />
+
+            <TextView
+                android:id="@+id/textview_relative_angle_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/relative_joint_angle"
+                android:layout_below="@id/relative_joint_angle"
+                android:text="@string/relative_angle_max"
+                android:textColor="@color/angle_seek_bar_labels"
+                android:textSize="@dimen/angle_seek_bar_labels" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:background="@color/light_blue" />
+
+        <Spinner
+            android:id="@+id/position_selector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/black_button"
+            android:textSize="30sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <View
+                    android:id="@+id/middle_of_two_buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_centerInParent="true" />
+
+                <Button
+                    android:id="@+id/go_to_position_button"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/middle_of_two_buttons"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/green_button"
+                    android:text="Go to position" />
+
+                <Button
+                    android:id="@+id/set_position_button"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/middle_of_two_buttons"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/blue_button"
+                    android:text="Update position" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/existing_joint_values_area"
+                android:layout_width="0dp"
+                android:paddingLeft="30dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/joint_1_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Joint 1" />
+
+                <TextView
+                    android:id="@+id/joint_1_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_1_title"
+                    android:layout_toRightOf="@id/joint_1_title"
+                    android:text="@string/unknown_joint_value" />
+
+                <TextView
+                    android:id="@+id/joint_2_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/joint_1_title"
+                    android:text="Joint 2" />
+
+                <TextView
+                    android:id="@+id/joint_2_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_2_title"
+                    android:layout_toRightOf="@id/joint_2_title"
+                    android:text="@string/unknown_joint_value" />
+
+                <TextView
+                    android:id="@+id/joint_3_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/joint_2_title"
+                    android:text="Joint 3" />
+
+                <TextView
+                    android:id="@+id/joint_3_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_3_title"
+                    android:layout_toRightOf="@id/joint_3_title"
+                    android:text="@string/unknown_joint_value" />
+
+                <TextView
+                    android:id="@+id/joint_4_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/joint_3_title"
+                    android:text="Joint 4" />
+
+                <TextView
+                    android:id="@+id/joint_4_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_4_title"
+                    android:layout_toRightOf="@id/joint_4_title"
+                    android:text="@string/unknown_joint_value" />
+
+                <TextView
+                    android:id="@+id/joint_5_title"
+                    style="@style/ExistingPositionsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/joint_4_title"
+                    android:text="Joint 5" />
+
+                <TextView
+                    android:id="@+id/joint_5_value"
+                    style="@style/ExistingPositionsText.Value"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/joint_5_title"
+                    android:layout_toRightOf="@id/joint_5_title"
+                    android:text="@string/unknown_joint_value" />
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

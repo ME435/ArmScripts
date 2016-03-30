@@ -1,0 +1,36 @@
+<resources>
+    <string name="tab_title_run">Run</string>
+    <string name="tab_title_scripts">Scripts</string>
+    <string name="tab_title_positions">Positions</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="me435">ME435</string>
+    <string name="arm_scripts">Arm Scripts</string>
+    <string name="welcome_me435_students">Welcome ME435 Students</string>
+    <string name="welcome_message">This app is intended to be used with an Android Accessory.
+        Currently this accessory is only available to Rose-Hulman students taking ME435.
+        If you are not one of those lucky people you should remove this app.
+        Assuming you are in the course connect your robot arm and get started.</string>
+    <string name="get_started">Get Started</string>
+    <string name="title_activity_project_list">ME435</string>
+    <string name="add_project">Add Project</string>
+    <string name="delete_project">Delete Project</string>
+    <string name="edit_project_name">Edit Project Name</string>
+    <string name="create_project">Create Project</string>
+    <string name="cancel">Cancel</string>
+    <string name="enter_a_project_name">Enter a project name</string>
+    <string name="dagu_robot_arm">Dagu robot arm</string>
+    <string name="create_position">Create Position</string>
+    <string name="enter_a_position_name">Enter a position name</string>
+    <string name="absolute_angle_min">-90º</string>
+    <string name="absolute_angle_max">+90º</string>
+    <string name="relative_angle_min">-5ºΔ</string>
+    <string name="relative_angle_max">+5ºΔ</string>
+    <string name="degrees_format">%1$dº</string>
+    <string name="mm_format">%1$dmm</string>
+    <string name="joint_label_format">%1$d: %2$dº</string>
+    <string name="unknown_joint_value">--</string>
+    <string name="someString"><font color="#030303">One Colored Text</font><font color="#FF0000"> Different Colored Text</font></string>
+    <string name="messages_sent_and_received">Messages <span style="color: #B3B3E3">sent</span> and <font color='#40BA3C'>received</font></string>
+
+</resources>
