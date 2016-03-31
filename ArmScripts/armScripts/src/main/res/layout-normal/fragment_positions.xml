@@ -161,9 +161,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="60dp"
-            android:layout_marginTop="60dp"
+            android:padding="5dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/black_button"
-            android:textSize="30sp" />
+            android:textSize="12sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -184,21 +185,22 @@
 
                 <Button
                     android:id="@+id/go_to_position_button"
-                    android:layout_width="170dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/middle_of_two_buttons"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginBottom="20dp"
+                    android:layout_alignParentRight="true"
+                    android:paddingTop="0dp"
+                    android:paddingBottom="0dp"
                     android:background="@drawable/green_button"
                     android:text="Go to position" />
 
                 <Button
                     android:id="@+id/set_position_button"
-                    android:layout_width="170dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/middle_of_two_buttons"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="10dp"
                     android:background="@drawable/blue_button"
                     android:text="Update position" />
             </RelativeLayout>
@@ -206,7 +208,7 @@
             <RelativeLayout
                 android:id="@+id/existing_joint_values_area"
                 android:layout_width="0dp"
-                android:paddingLeft="30dp"
+                android:paddingLeft="10dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" >
 
