@@ -9,6 +9,7 @@ import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,8 +27,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
+
 import edu.rosehulman.armscripts.db.PositionDbAdapter;
-import edu.rosehulman.armscripts.db.ScriptDbAdapter;
 
 /**
  * The goal of this fragment is to allow a user to create positions within a
@@ -171,6 +172,8 @@ public class PositionsFragment extends Fragment {
     mCurrentJointValues[4] = -90;
     mCurrentJointValues[5] = 90;
     mCurrentJointValues[GRIPPER_JOINT_NUMBER] = 50;
+
+    setHasOptionsMenu(true);
   }
 
   /**
@@ -225,13 +228,17 @@ public class PositionsFragment extends Fragment {
 
     // Create button handler.  Launch the dialog (in create mode) when clicked.
     Button createPositionButton = (Button) view.findViewById(R.id.create_position_button);
-    createPositionButton.setOnClickListener(new View.OnClickListener() {
-      @Override
-      public void onClick(View v) {
-        mRenamePosition = false;
-        mCreatePositionDF.show(getFragmentManager(), "create position");
-      }
-    });
+    if (createPositionButton != null) {
+      setHasOptionsMenu(false); // Remove the menu button if we have the button here.
+      createPositionButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          mRenamePosition = false;
+          mCreatePositionDF.show(getFragmentManager(), "create position");
+        }
+      });
+    }
+
 
     // Joint buttons in the teach pendant.
     updateJointButtonText();
@@ -455,7 +462,7 @@ public class PositionsFragment extends Fragment {
     mExistingPositionTextView[4].setText(getString(R.string.degrees_format,
         positionSelected.getInt(joint4Column)));
     mExistingPositionTextView[5].setText(getString(R.string.degrees_format,
-        positionSelected.getInt(joint5Column)));
+            positionSelected.getInt(joint5Column)));
   }
 
   /**
@@ -635,6 +642,23 @@ public class PositionsFragment extends Fragment {
     mPositionDbAdapter.updatePositionName(mSelectedPositionId, positionName);
     Cursor cursor = mPositionDbAdapter.fetchAllProjectPositions(mParentProjectId);
     mPositionsCursorAdapter.changeCursor(cursor);
+  }
+
+  @Override
+  public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.positions_options_menu, menu);
+  }
+
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.create_position_menu_item:
+        mRenamePosition = false;
+        mCreatePositionDF.show(getFragmentManager(), "create position");
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 
   @Override

@@ -9,34 +9,11 @@
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <TextView
-            android:id="@+id/textview_pendant_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:text="Teach Pendant"
-            android:textColor="@color/light_blue"
-            android:textSize="30sp" />
-
-        <Button
-            android:id="@+id/create_position_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/textview_pendant_title"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/red_button"
-            android:text="Create position" />
-
         <View
             android:id="@+id/current_position_underline"
             android:layout_width="match_parent"
             android:layout_height="2dip"
-            android:layout_below="@id/textview_pendant_title"
+            android:layout_alignParentTop="true"
             android:background="@color/light_blue" />
 
         <LinearLayout
@@ -81,14 +58,14 @@
             android:id="@+id/viewgroup_current_joint_angle_area"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/textview_pendant_title"
+            android:layout_alignParentTop="true"
             android:layout_toRightOf="@id/linearlayout_joint_buttons"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp" >
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp" >
 
             <ImageView
                 android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_height="160dp"
                 android:layout_centerInParent="true"
                 android:contentDescription="blue circle"
                 android:src="@drawable/blue_circle_2" />
@@ -98,25 +75,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="48 deg"
+                android:text="90"
                 android:textSize="40sp" />
 
             <SeekBar
                 android:id="@+id/absolute_joint_angle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_above="@+id/textview_current_angle"
-                android:layout_marginBottom="70dp"
+                android:layout_marginBottom="45dp"
                 android:max="180"
                 android:progress="90" />
 
             <SeekBar
                 android:id="@+id/relative_joint_angle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_below="@+id/textview_current_angle"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="45dp"
                 android:max="10"
                 android:progress="5" />
 
@@ -128,7 +105,9 @@
                 android:layout_alignLeft="@id/absolute_joint_angle"
                 android:text="@string/absolute_angle_min"
                 android:textColor="@color/angle_seek_bar_labels"
-                android:textSize="@dimen/angle_seek_bar_labels" />
+                android:textSize="@dimen/angle_seek_bar_labels"
+                android:visibility="gone"
+                />
 
             <TextView
                 android:id="@+id/textview_absolute_angle_max"
@@ -138,7 +117,8 @@
                 android:layout_alignRight="@id/absolute_joint_angle"
                 android:text="@string/absolute_angle_max"
                 android:textColor="@color/angle_seek_bar_labels"
-                android:textSize="@dimen/angle_seek_bar_labels" />
+                android:textSize="@dimen/angle_seek_bar_labels"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/textview_relative_angle_min"
@@ -148,7 +128,8 @@
                 android:layout_below="@id/relative_joint_angle"
                 android:text="@string/relative_angle_min"
                 android:textColor="@color/angle_seek_bar_labels"
-                android:textSize="@dimen/angle_seek_bar_labels" />
+                android:textSize="@dimen/angle_seek_bar_labels"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/textview_relative_angle_max"
@@ -158,7 +139,8 @@
                 android:layout_below="@id/relative_joint_angle"
                 android:text="@string/relative_angle_max"
                 android:textColor="@color/angle_seek_bar_labels"
-                android:textSize="@dimen/angle_seek_bar_labels" />
+                android:textSize="@dimen/angle_seek_bar_labels"
+                android:visibility="gone"/>
         </RelativeLayout>
     </RelativeLayout>
 
