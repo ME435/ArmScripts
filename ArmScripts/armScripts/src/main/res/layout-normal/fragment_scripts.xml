@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_weight="4"
         android:orientation="vertical"
-        android:padding="5dp" >
+        android:padding="0dp" >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -17,25 +17,27 @@
 
             <ToggleButton
                 android:id="@+id/toggle_button_edit_commands"
-                android:layout_width="80dp"
-                android:layout_height="42dp"
+                android:layout_width="52dp"
+                android:layout_height="36dp"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
+                android:padding="0dp"
                 android:textOff="Edit"
                 android:textOn="Done"
-                android:textSize="18sp" />
+                android:textSize="12sp" />
 
             <Spinner
                 android:id="@+id/select_script_spinner"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="32dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@id/toggle_button_edit_commands"
                 android:background="@drawable/black_button"
                 android:minHeight="12dp"
+                android:layout_marginTop="3dp"
                 android:paddingBottom="0dp"
-                android:paddingLeft="5dp"
+                android:paddingLeft="4dp"
                 android:paddingRight="0dp"
                 android:paddingTop="0dp" />
         </RelativeLayout>
@@ -163,7 +165,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_toLeftOf="@id/button_divider"
                 android:background="@drawable/green_button"
-                android:text="Attach" />
+                android:text="A" />
 
             <Button
                 android:id="@+id/button_gripper_detach"
@@ -175,7 +177,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_toRightOf="@id/button_divider"
                 android:background="@drawable/red_button"
-                android:text="Detach" />
+                android:text="D" />
 
             <View
                 android:id="@+id/line_below_gripper"
