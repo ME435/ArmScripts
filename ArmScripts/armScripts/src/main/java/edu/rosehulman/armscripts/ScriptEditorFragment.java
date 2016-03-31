@@ -155,7 +155,7 @@ public class ScriptEditorFragment extends Fragment {
       Cursor scriptSelected = mScriptDbAdapter.fetchScript(mActiveScriptId);
       int nameColumn = scriptSelected.getColumnIndexOrThrow(ScriptDbAdapter.KEY_NAME);
       String name = scriptSelected.getString(nameColumn);
-      dialog.setTitle("Are you sure you wish to delete " + name + "?");
+      dialog.setTitle("Delete " + name + "?");
 
       confirmButton.setOnClickListener(new View.OnClickListener() {
         @Override

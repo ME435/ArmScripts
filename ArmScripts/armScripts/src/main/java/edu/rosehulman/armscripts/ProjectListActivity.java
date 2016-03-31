@@ -1,7 +1,6 @@
 package edu.rosehulman.armscripts;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,9 +17,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+
 import edu.rosehulman.armscripts.db.DbOpenHelper;
 import edu.rosehulman.armscripts.db.ProjectDbAdapter;
-import edu.rosehulman.armscripts.db.ScriptDbAdapter;
 
 /**
  * Activity that displays a list view of projects.
@@ -209,7 +208,7 @@ public class ProjectListActivity extends ListActivity {
       Cursor cursorForSelectedProject = mProjectDbAdapter.fetchProject(mSelectedId);
       int nameColumn = cursorForSelectedProject.getColumnIndexOrThrow(ProjectDbAdapter.KEY_NAME);
       String selectedProjectName = cursorForSelectedProject.getString(nameColumn);
-      dialog.setTitle("Are you sure you wish to delete " + selectedProjectName + "?");
+      dialog.setTitle("Delete " + selectedProjectName + "?");
       
       final Button confirmDeleteButton = (Button) dialog.findViewById(R.id.confirm_delete_project_button);
       final Button cancelDeleteButton = (Button) dialog.findViewById(R.id.cancel_delete_project_button);
