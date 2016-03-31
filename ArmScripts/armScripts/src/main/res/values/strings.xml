@@ -6,11 +6,8 @@
     <string name="menu_settings">Settings</string>
     <string name="me435">ME435</string>
     <string name="arm_scripts">Arm Scripts</string>
-    <string name="welcome_me435_students">Welcome ME435 Students</string>
-    <string name="welcome_message">This app is intended to be used with an Android Accessory.
-        Currently this accessory is only available to Rose-Hulman students taking ME435.
-        If you are not one of those lucky people you should remove this app.
-        Assuming you are in the course connect your robot arm and get started.</string>
+    <string name="welcome_me435_students">ME435 / CSSE435</string>
+    <string name="welcome_message">On your Arduino load File --> Examples --> RobotAsciiCom --> ArmScripts</string>
     <string name="get_started">Get Started</string>
     <string name="title_activity_project_list">ME435</string>
     <string name="add_project">Add Project</string>

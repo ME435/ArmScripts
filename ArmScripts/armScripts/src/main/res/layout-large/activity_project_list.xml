@@ -23,7 +23,7 @@
             android:layout_margin="40dp"
             android:gravity="center_horizontal"
             android:text="@string/welcome_me435_students"
-            android:textSize="40sp" />
+            android:textSize="50sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -38,7 +38,7 @@
             android:padding="50dp"
             android:text="@string/welcome_message"
             android:textColor="#8bb"
-            android:textSize="22sp"
+            android:textSize="32sp"
             android:textStyle="italic" />
 
         <Button

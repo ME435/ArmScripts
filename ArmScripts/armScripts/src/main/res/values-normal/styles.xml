@@ -4,20 +4,20 @@
 
     <style name="ExistingPositionsText">
         <item name="android:textColor">#888</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:textStyle">italic</item>
     </style>
 
     <style name="ExistingPositionsText.Value">
         <item name="android:textColor">#2BA2aa</item>
-        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_width">20dp</item>
         <item name="android:gravity">center</item>
     </style>
 
     <style name="ButtonText">
         <item name="android:textColor">#ccc</item>
-        <item name="android:textSize">22sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:shadowColor">#000000</item>
         <item name="android:shadowDx">1</item>
@@ -38,15 +38,15 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">#888</item>
-        <item name="android:layout_marginTop">3dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">3dp</item>
     </style>
 
     <style name="BlueHeading">
         <item name="android:textColor">@color/light_blue</item>
-        <item name="android:textSize">24sp</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:layout_marginLeft">3dp</item>
         <item name="android:textStyle">italic</item>
     </style>
 
