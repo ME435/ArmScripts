@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
@@ -45,7 +44,7 @@ import edu.rosehulman.armscripts.db.ScriptDbAdapter;
 public class ScriptEditorFragment extends Fragment {
 
   private static final String TAG = ScriptEditorFragment.class.getSimpleName();
-  private static final String DEFAULT_SCRIPT_NAME = "UNTITLED_SCRIPT";
+  private static final String DEFAULT_SCRIPT_NAME = "Untitled script";
 
   /** Id of the parent project. */
   private long mParentProjectId;
@@ -209,7 +208,7 @@ public class ScriptEditorFragment extends Fragment {
       Cursor commandCursor = mCommandDbAdapter.fetchCommand(mSelectedCommandId);
       switch (mSelectedCommandType) {
       case DELAY:
-        dialog.setTitle("Set a new delay time (in milliseconds)");
+        dialog.setTitle("New delay time ms");
         // commandValueEditText.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
         int delayColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_DELAY_MS);
         int delayValue = commandCursor.getInt(delayColumn);
@@ -217,7 +216,7 @@ public class ScriptEditorFragment extends Fragment {
         commandValueEditText.setText("");
         break;
       case GRIPPER:
-        dialog.setTitle("New gripper distance in millimeters (0 to 100)");
+        dialog.setTitle("New gripper distance");
         // commandValueEditText.setInputType(InputType.TYPE_NUMBER_VARIATION_NORMAL);
         int gripperColumn = commandCursor
             .getColumnIndexOrThrow(CommandDbAdapter.KEY_GRIPPER_DISTANCE);
@@ -226,14 +225,14 @@ public class ScriptEditorFragment extends Fragment {
         commandValueEditText.setText("");
         break;
       case CUSTOM:
-        dialog.setTitle("Enter a new custom command");
+        dialog.setTitle("New custom command");
         commandValueEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
         int customColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_CUSTOM_COMMAND);
         String customText = commandCursor.getString(customColumn);
         commandValueEditText.setText(customText);
         break;
       case ATTACH:
-        dialog.setTitle("Enter a new attach command");
+        dialog.setTitle("New attach command");
         commandValueEditText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
         int attachColumn = commandCursor.getColumnIndexOrThrow(CommandDbAdapter.KEY_CUSTOM_COMMAND);  // TODO: Make and Attach column
         String attachText = commandCursor.getString(attachColumn);

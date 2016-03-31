@@ -177,20 +177,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" >
 
-                <View
-                    android:id="@+id/middle_of_two_buttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_centerInParent="true" />
-
                 <Button
                     android:id="@+id/go_to_position_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_above="@id/middle_of_two_buttons"
                     android:layout_alignParentRight="true"
                     android:paddingTop="0dp"
                     android:paddingBottom="0dp"
+                    android:layout_marginTop="5dp"
                     android:background="@drawable/green_button"
                     android:text="Go to position" />
 
@@ -198,7 +192,7 @@
                     android:id="@+id/set_position_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/middle_of_two_buttons"
+                    android:layout_below="@id/go_to_position_button"
                     android:layout_alignParentRight="true"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/blue_button"

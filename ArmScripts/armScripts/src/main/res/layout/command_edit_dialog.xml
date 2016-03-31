@@ -12,7 +12,9 @@
 		android:layout_margin="10dp"
 		android:inputType="number"
 		android:imeOptions="actionDone"
-		android:singleLine="true"/>
+		android:singleLine="true">
+		<requestFocus />
+	</EditText>
 	<LinearLayout
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
@@ -29,6 +31,6 @@
 			android:layout_width="0dp"
 			android:layout_weight="1"
 			android:layout_height="wrap_content"
-			android:text="Update command"/>
+			android:text="Update"/>
 	</LinearLayout>
 </LinearLayout>
